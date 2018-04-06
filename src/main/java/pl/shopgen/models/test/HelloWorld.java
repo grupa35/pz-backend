@@ -1,4 +1,4 @@
-package pl.shopgen.models;
+package pl.shopgen.models.test;
 
 public class HelloWorld {
     private String mes;
