@@ -24,4 +24,10 @@ public class HelloWorldController {
         String text = "justynapietryga";
         return new SimpleTestMessage(text);
     }
+
+    @RequestMapping("/api/test/tpiwowarski")
+    public SimpleTestMessage tpiwowarski()
+    {
+        return new SimpleTestMessage("tpiwowarski");
+    }
 }
