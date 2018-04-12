@@ -26,8 +26,13 @@ public class HelloWorldController {
     }
 
     @RequestMapping("/api/test/tpiwowarski")
-    public SimpleTestMessage tpiwowarski()
-    {
+    public SimpleTestMessage tpiwowarski() {
         return new SimpleTestMessage("tpiwowarski");
+    }
+
+    @RequestMapping("/api/test/wrup")
+    public SimpleTestMessage wrupTest() {
+        String text = "wrup";
+        return new SimpleTestMessage(text);
     }
 }
