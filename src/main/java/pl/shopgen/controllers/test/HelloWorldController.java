@@ -35,4 +35,9 @@ public class HelloWorldController {
         String text = "wrup";
         return new SimpleTestMessage(text);
     }
+    @RequestMapping("/api/test/piotrpiedel")
+    public SimpleTestMessage piotrpiedelTest() {
+        String text = "piotrpiedel";
+        return new SimpleTestMessage(text);
+    }
 }
