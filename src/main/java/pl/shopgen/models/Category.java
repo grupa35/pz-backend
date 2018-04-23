@@ -34,6 +34,14 @@ public class Category {
         return subcategories;
     }
 
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSubcategories(List<Category> subcategories) {
+        this.subcategories = subcategories;
+
     @Override
     public boolean equals(Object o) {
         if(this == o) {
@@ -60,5 +68,6 @@ public class Category {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + subcategories.hashCode();
         return result;
+
     }
 }
