@@ -28,7 +28,6 @@ public abstract class SimpleMongoRepositoryTest<T extends SimpleObject, R extend
 
     @Test
     public void saveAndFindObject() {
-        getObject();
         saveObject();
         T foundObject = repository.findById(savedObject.getObjectId()).orElse(null);
         assertEquals(savedObject, foundObject);
