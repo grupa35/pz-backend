@@ -41,6 +41,7 @@ public class Category {
 
     public void setSubcategories(List<Category> subcategories) {
         this.subcategories = subcategories;
+    }
 
     @Override
     public boolean equals(Object o) {
