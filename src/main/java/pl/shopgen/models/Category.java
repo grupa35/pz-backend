@@ -33,4 +33,12 @@ public class Category {
     public List<Category> getSubcategories() {
         return subcategories;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSubcategories(List<Category> subcategories) {
+        this.subcategories = subcategories;
+    }
 }
