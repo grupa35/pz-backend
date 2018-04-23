@@ -17,7 +17,7 @@ public class GetProductController {
 
     @RequestMapping(value = "/{product_id}", method = RequestMethod.GET)
     @ResponseBody
-    Product getCategory(@PathVariable("product_id") String productId) {
+    Product getProduct(@PathVariable("product_id") String productId) {
         return productRepository.findById(productId).get();
     }
 }
