@@ -11,7 +11,7 @@ import java.util.Map;
 public class Product implements SimpleObject {
 
     @Id
-    private String objectId;
+    private String id;
 
     private String name;
 
@@ -29,7 +29,7 @@ public class Product implements SimpleObject {
 
     public Product(Product other) {
         if(other != null) {
-            this.objectId = other.objectId;
+            this.id = other.id;
             this.name = other.name;
             this.price = other.price;
             this.imgUrl = other.imgUrl;
@@ -41,12 +41,12 @@ public class Product implements SimpleObject {
 
     @Override
     public String getObjectId() {
-        return objectId;
+        return id;
     }
 
     @Override
     public void setObjectId(String objectId) {
-        this.objectId = objectId;
+        this.id = id;
     }
 
     public String getName() {
@@ -108,7 +108,7 @@ public class Product implements SimpleObject {
 
         Product product = (Product) o;
 
-        if(objectId != null ? !objectId.equals(product.objectId) : product.objectId != null) {
+        if(id != null ? !id.equals(product.id) : product.id != null) {
             return false;
         }
         if(name != null ? !name.equals(product.name) : product.name != null) {
@@ -131,7 +131,7 @@ public class Product implements SimpleObject {
 
     @Override
     public int hashCode() {
-        int result = objectId != null ? objectId.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (imgUrl != null ? imgUrl.hashCode() : 0);

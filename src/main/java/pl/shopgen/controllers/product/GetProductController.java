@@ -15,9 +15,9 @@ public class GetProductController {
         this.productRepository = productRepository;
     }
 
-    @RequestMapping(value = "/{product_id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{productId}", method = RequestMethod.GET)
     @ResponseBody
-    Product getProduct(@PathVariable("product_id") String productId) {
+    Product getProduct(@PathVariable("productId") String productId) {
         return productRepository.findById(productId).get();
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/products")
 public class GetProductsController {
 
     private final ProductRepository productRepository;

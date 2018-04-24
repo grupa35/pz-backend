@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/products")
 public class DeleteProducts {
     private final ProductRepository productRepository;
 
