@@ -29,7 +29,7 @@ public abstract class SimpleMongoRepositoryTest<T extends SimpleObject, R extend
     @Test
     public void saveAndFindObject() {
         saveObject();
-        T foundObject = repository.findById(savedObject.getObjectId()).orElse(null);
+        T foundObject = repository.findById(savedObject.getId()).orElse(null);
         assertEquals(savedObject, foundObject);
     }
 
@@ -41,8 +41,8 @@ public abstract class SimpleMongoRepositoryTest<T extends SimpleObject, R extend
     public void deleteObject() {
         saveObject();
         Optional<T> foundedObject;
-        repository.deleteById(savedObject.getObjectId());
-        foundedObject = repository.findById(savedObject.getObjectId());
+        repository.deleteById(savedObject.getId());
+        foundedObject = repository.findById(savedObject.getId());
         assertFalse(foundedObject.isPresent());
     }
 
@@ -65,7 +65,7 @@ public abstract class SimpleMongoRepositoryTest<T extends SimpleObject, R extend
         List<T> foundedObjectList = new ArrayList<>();
 
         foundedObjects = repository.findAllById(savedObjects.stream()
-                                                                     .map(T::getObjectId)
+                                                                     .map(T::getId)
                                                                      .collect(Collectors.toList()));
 
         foundedObjects.forEach(foundedObjectList::add);
@@ -79,7 +79,7 @@ public abstract class SimpleMongoRepositoryTest<T extends SimpleObject, R extend
 
         repository.deleteAll(savedObjects);
         foundedObjects = repository.findAllById(savedObjects.stream()
-                                                                     .map(T::getObjectId)
+                                                                     .map(T::getId)
                                                                      .collect(Collectors.toList()));
         assertFalse(foundedObjects.iterator().hasNext());
     }

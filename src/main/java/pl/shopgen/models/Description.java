@@ -4,10 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class Description implements SimpleObject{
-
-    @Id
-    String objectId;
+public class Description extends SimpleObject{
 
     String name;
 
@@ -17,20 +14,10 @@ public class Description implements SimpleObject{
 
     public Description(Description other) {
         if(other != null) {
-            objectId = other.objectId;
+            setId(other.getId());
             name = other.name;
             value = other.value;
         }
-    }
-
-    @Override
-    public String getObjectId() {
-        return objectId;
-    }
-
-    @Override
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
     }
 
     public String getName() {
@@ -54,15 +41,15 @@ public class Description implements SimpleObject{
         if(this == o) {
             return true;
         }
-        if(o == null || getClass() != o.getClass()) {
+        if(!(o instanceof Description)) {
+            return false;
+        }
+        if(!super.equals(o)) {
             return false;
         }
 
         Description that = (Description) o;
 
-        if(objectId != null ? !objectId.equals(that.objectId) : that.objectId != null) {
-            return false;
-        }
         if(name != null ? !name.equals(that.name) : that.name != null) {
             return false;
         }
@@ -71,7 +58,7 @@ public class Description implements SimpleObject{
 
     @Override
     public int hashCode() {
-        int result = objectId != null ? objectId.hashCode() : 0;
+        int result = super.hashCode();
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (value != null ? value.hashCode() : 0);
         return result;

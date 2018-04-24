@@ -7,9 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Document
-public class Category {
-    @Id
-    private String id;
+public class Category extends SimpleObject {
+
     private String name;
     private List<Category> subcategories;
 
@@ -20,10 +19,6 @@ public class Category {
     public Category(String name, List<Category> subcategories) {
         this.name = name;
         this.subcategories = subcategories;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getName() {
@@ -48,15 +43,15 @@ public class Category {
         if(this == o) {
             return true;
         }
-        if(o == null || getClass() != o.getClass()) {
+        if(!(o instanceof Category)) {
+            return false;
+        }
+        if(!super.equals(o)) {
             return false;
         }
 
         Category category = (Category) o;
 
-        if(id != null ? !id.equals(category.id) : category.id != null) {
-            return false;
-        }
         if(name != null ? !name.equals(category.name) : category.name != null) {
             return false;
         }
@@ -65,10 +60,9 @@ public class Category {
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
+        int result = super.hashCode();
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + subcategories.hashCode();
         return result;
-
     }
 }
