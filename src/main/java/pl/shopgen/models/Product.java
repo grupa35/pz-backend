@@ -8,10 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Document
-public class Product implements SimpleObject {
-
-    @Id
-    private String objectId;
+public class Product extends SimpleObject {
 
     private String name;
 
@@ -29,7 +26,7 @@ public class Product implements SimpleObject {
 
     public Product(Product other) {
         if(other != null) {
-            this.objectId = other.objectId;
+            setId(other.getId());
             this.name = other.name;
             this.price = other.price;
             this.imgUrl = other.imgUrl;
@@ -37,16 +34,6 @@ public class Product implements SimpleObject {
             this.sizeToAmountMap = other.sizeToAmountMap;
             this.description = other.description;
         }
-    }
-
-    @Override
-    public String getObjectId() {
-        return objectId;
-    }
-
-    @Override
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
     }
 
     public String getName() {
@@ -102,15 +89,15 @@ public class Product implements SimpleObject {
         if(this == o) {
             return true;
         }
-        if(o == null || getClass() != o.getClass()) {
+        if(!(o instanceof Product)) {
+            return false;
+        }
+        if(!super.equals(o)) {
             return false;
         }
 
         Product product = (Product) o;
 
-        if(objectId != null ? !objectId.equals(product.objectId) : product.objectId != null) {
-            return false;
-        }
         if(name != null ? !name.equals(product.name) : product.name != null) {
             return false;
         }
@@ -131,7 +118,7 @@ public class Product implements SimpleObject {
 
     @Override
     public int hashCode() {
-        int result = objectId != null ? objectId.hashCode() : 0;
+        int result = super.hashCode();
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (imgUrl != null ? imgUrl.hashCode() : 0);
