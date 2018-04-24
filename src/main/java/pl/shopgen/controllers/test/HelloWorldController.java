@@ -6,43 +6,44 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.shopgen.models.test.SimpleTestMessage;
 
 @RestController
+@RequestMapping("/test")
 public class HelloWorldController {
 
-    @RequestMapping("/api/test/hello")
+    @RequestMapping("/hello")
     public SimpleTestMessage helloWorldTest(@RequestParam(value = "text", defaultValue = "Hello World") String text) {
         return new SimpleTestMessage(text);
     }
 
-    @RequestMapping("/api/test/romic96")
+    @RequestMapping("/romic96")
     public SimpleTestMessage romic96Test() {
         String text = "romic96";
         return new SimpleTestMessage(text);
     }
 
-    @RequestMapping("/api/test/justynapietryga")
+    @RequestMapping("/justynapietryga")
     public SimpleTestMessage justynapietrygaTest() {
         String text = "justynapietryga";
         return new SimpleTestMessage(text);
     }
 
-    @RequestMapping("/api/test/tpiwowarski")
+    @RequestMapping("/tpiwowarski")
     public SimpleTestMessage tpiwowarski() {
         return new SimpleTestMessage("tpiwowarski");
     }
 
-    @RequestMapping("/api/test/wrup")
+    @RequestMapping("/wrup")
     public SimpleTestMessage wrupTest() {
         String text = "wrup";
         return new SimpleTestMessage(text);
     }
 
-    @RequestMapping("/api/test/piotrpiedel")
+    @RequestMapping("/piotrpiedel")
     public SimpleTestMessage piotrpiedelTest() {
         String text = "piotrpiedel";
         return new SimpleTestMessage(text);
     }
 
-    @RequestMapping("/api/test/przemyslawstrojny")
+    @RequestMapping("/przemyslawstrojny")
     public SimpleTestMessage przemyslawstrojnyTest() {
         String text = "przemyslawstrojny";
         return new SimpleTestMessage(text);

@@ -1,16 +1,16 @@
 buildscript {
-	ext {
-		springBootVersion = '2.0.0.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		// https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
-		//compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+    ext {
+        springBootVersion = '2.0.0.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
+        //compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
 
-	}
+    }
 }
 
 apply plugin: 'java'
@@ -24,16 +24,17 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 9
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 configurations {
-	providedRuntime
+    providedRuntime
 }
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-web')
-	runtime('org.springframework.boot:spring-boot-devtools')
-	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    runtime('org.springframework.boot:spring-boot-devtools')
+    providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile('org.springframework.boot:spring-boot-starter-data-mongodb')
 }
