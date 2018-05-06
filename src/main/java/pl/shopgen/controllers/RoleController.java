@@ -7,7 +7,7 @@ import pl.shopgen.models.RoleRepository;
 import java.util.List;
 
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/roles")
 public class RoleController {
 
     private final RoleRepository roleRepository;
@@ -21,8 +21,8 @@ public class RoleController {
         return roleRepository.insert(role);
     }
 
-    @RequestMapping(value = "/{RoleId}", method = RequestMethod.DELETE)
-    public Role deleteRole(@PathVariable("RoleId") String RoleId) {
+    @RequestMapping(value = "/{roleId}", method = RequestMethod.DELETE)
+    public Role deleteRole(@PathVariable("roleId") String RoleId) {
         Role role = roleRepository.findById(RoleId).orElse(null);
         if (role != null) {
             roleRepository.deleteById(RoleId);
@@ -37,9 +37,9 @@ public class RoleController {
         return roles;
     }
 
-    @RequestMapping(value = "/{RoleId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{roleId}", method = RequestMethod.GET)
     @ResponseBody
-    public Role getRole(@PathVariable("RoleId") String RoleId) {
+    public Role getRole(@PathVariable("roleId") String RoleId) {
         return roleRepository.findById(RoleId).orElse(null);
     }
 

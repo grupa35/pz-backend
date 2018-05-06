@@ -40,12 +40,11 @@ public class Role extends SimpleObject {
 
         Role role = (Role) o;
 
-        if (!(name != null ? !name.equals(role.name) : role.name != null)) {
-
-            assert name != null;
-            return name.equals(role.name);
-        } else {
+        if (name != null ? !name.equals(role.name) : role.name != null) {
             return false;
+        } else {
+            return name.equals(role.name);
         }
+
     }
 }
