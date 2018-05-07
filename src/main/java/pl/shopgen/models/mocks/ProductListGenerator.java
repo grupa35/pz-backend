@@ -1,10 +1,14 @@
-package pl.shopgen.models;
+package pl.shopgen.models.mocks;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import pl.shopgen.models.Category;
+import pl.shopgen.models.Description;
+import pl.shopgen.models.Product;
 
 public class ProductListGenerator {
 
@@ -16,7 +20,7 @@ public class ProductListGenerator {
     private Product p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15;
 
 
-    ProductListGenerator() {
+    public ProductListGenerator() {
     }
 
     public List<Product> generateProducts() {
@@ -27,8 +31,7 @@ public class ProductListGenerator {
         description.setValue("Sukienka z dekoltem w serek.");
 
         p1.setCategory(new Category("Sukienki",
-                                    new ArrayList<>(Collections.singletonList(new Category("Damskie",
-                                                                                           new ArrayList<>())))));
+                new ArrayList<>(Collections.singletonList(new Category("Damskie", new ArrayList<>())))));
         p1.setImgUrl("img-url");
         p1.setName("New Look");
         p1.setPrice(new BigDecimal(79.90));
@@ -49,8 +52,7 @@ public class ProductListGenerator {
         description.setName("Opis");
         description.setValue("Dłuższa marynarka z elastycznej takniny.");
         p2.setCategory(new Category("Marynarki i kamizelki",
-                                    new ArrayList<>(Collections.singletonList(new Category("Damskie",
-                                                                                           new ArrayList<>())))));
+                new ArrayList<>(Collections.singletonList(new Category("Damskie", new ArrayList<>())))));
         p2.setImgUrl("img-url");
         p2.setName("Topshop");
         p2.setPrice(new BigDecimal(149.90));
@@ -71,8 +73,7 @@ public class ProductListGenerator {
         description.setName("Opis");
         description.setValue("Szorty z bawełnianej popeliny ze sznurkiem.");
         p3.setCategory(new Category("1,5 - 10 lat",
-                                    new ArrayList<>(Collections.singletonList(new Category("Dzieciece",
-                                                                                           new ArrayList<>())))));
+                new ArrayList<>(Collections.singletonList(new Category("Dzieciece", new ArrayList<>())))));
         p3.setImgUrl("img-url");
         p3.setName("Benetton");
         p3.setPrice(new BigDecimal(29.90));
@@ -92,8 +93,7 @@ public class ProductListGenerator {
         description.setName("Opis");
         description.setValue("Sznurowane buty z bawełny.");
         p4.setCategory(new Category("Buty",
-                                    new ArrayList<>(Collections.singletonList(new Category("Męskie",
-                                                                                           new ArrayList<>())))));
+                new ArrayList<>(Collections.singletonList(new Category("Męskie", new ArrayList<>())))));
         p4.setImgUrl("img-url");
         p4.setName("Adidas");
         p4.setPrice(new BigDecimal(299.00));
@@ -107,8 +107,7 @@ public class ProductListGenerator {
         description.setName("Opis");
         description.setValue("Bawełniana koszulka z kieszenią.");
         p5.setCategory(new Category("T-shirt",
-                                    new ArrayList<>(Collections.singletonList(new Category("Męskie",
-                                                                                           new ArrayList<>())))));
+                new ArrayList<>(Collections.singletonList(new Category("Męskie", new ArrayList<>())))));
         p5.setImgUrl("img-url");
         p5.setName("Nike");
         p5.setPrice(new BigDecimal(79.99));
@@ -123,8 +122,7 @@ public class ProductListGenerator {
         description.setName("Opis");
         description.setValue("Jeansy z postrzępionymi nogawkami.");
         p6.setCategory(new Category("Jeansy",
-                                    new ArrayList<>(Collections.singletonList(new Category("Damskie",
-                                                                                           new ArrayList<>())))));
+                new ArrayList<>(Collections.singletonList(new Category("Damskie", new ArrayList<>())))));
         p6.setImgUrl("img-url");
         p6.setName("Levi's");
         p6.setPrice(new BigDecimal(99.99));
@@ -140,8 +138,7 @@ public class ProductListGenerator {
         description.setName("Opis");
         description.setValue("Jednoczęściowy strój kąpielowy z roślinnym motywem");
         p7.setCategory(new Category("Stroje kąpielowe",
-                                    new ArrayList<>(Collections.singletonList(new Category("Damskie",
-                                                                                           new ArrayList<>())))));
+                new ArrayList<>(Collections.singletonList(new Category("Damskie", new ArrayList<>())))));
         p7.setImgUrl("img-url");
         p7.setName("O'Nell");
         p7.setPrice(new BigDecimal(79.99));
@@ -157,8 +154,7 @@ public class ProductListGenerator {
         description.setName("Opis");
         description.setValue("Piżama z nadrukiem.");
         p8.setCategory(new Category("Piżamy",
-                                    new ArrayList<>(Collections.singletonList(new Category("Damskie",
-                                                                                           new ArrayList<>())))));
+                new ArrayList<>(Collections.singletonList(new Category("Damskie", new ArrayList<>())))));
         p8.setImgUrl("img-url");
         p8.setName("OYSHO");
         p8.setPrice(new BigDecimal(79.99));
@@ -174,8 +170,7 @@ public class ProductListGenerator {
         description.setName("Opis");
         description.setValue("Kurtka z nadrukiem BOHO z motywami roslinnymi.");
         p9.setCategory(new Category("2 - 8 lat",
-                                    new ArrayList<>(Collections.singletonList(new Category("Dzieciece",
-                                                                                           new ArrayList<>())))));
+                new ArrayList<>(Collections.singletonList(new Category("Dzieciece", new ArrayList<>())))));
         p9.setImgUrl("img-url");
         p9.setName("mint&berry");
         p9.setPrice(new BigDecimal(69.99));
@@ -193,8 +188,7 @@ public class ProductListGenerator {
         description.setName("Opis");
         description.setValue("Torba na ramię.");
         p10.setCategory(new Category("Torebki",
-                                     new ArrayList<>(Collections.singletonList(new Category("Damskie",
-                                                                                            new ArrayList<>())))));
+                new ArrayList<>(Collections.singletonList(new Category("Damskie", new ArrayList<>())))));
         p10.setImgUrl("img-url");
         p10.setName("RIVER ISLAND");
         p10.setPrice(new BigDecimal(149.00));
@@ -206,8 +200,7 @@ public class ProductListGenerator {
         description.setName("Opis");
         description.setValue("Spódnica z zakładką.");
         p11.setCategory(new Category("Spódnica",
-                                     new ArrayList<>(Collections.singletonList(new Category("Damskie",
-                                                                                            new ArrayList<>())))));
+                new ArrayList<>(Collections.singletonList(new Category("Damskie", new ArrayList<>())))));
         p11.setImgUrl("img-url");
         p11.setName("New Look");
         p11.setPrice(new BigDecimal(84.00));
@@ -225,8 +218,7 @@ public class ProductListGenerator {
         description.setName("Opis");
         description.setValue("Portfel skórzany czarny.");
         p12.setCategory(new Category("Portfele",
-                                     new ArrayList<>(Collections.singletonList(new Category("Męskie",
-                                                                                            new ArrayList<>())))));
+                new ArrayList<>(Collections.singletonList(new Category("Męskie", new ArrayList<>())))));
         p12.setImgUrl("img-url");
         p12.setName("Calvin Klein");
         p12.setPrice(new BigDecimal(249.00));
@@ -238,8 +230,7 @@ public class ProductListGenerator {
         description.setName("Opis");
         description.setValue("Bluza z kapturem z kieszenią z przodu.");
         p13.setCategory(new Category("Bluzy i swetry",
-                                     new ArrayList<>(Collections.singletonList(new Category("Męskie",
-                                                                                            new ArrayList<>())))));
+                new ArrayList<>(Collections.singletonList(new Category("Męskie", new ArrayList<>())))));
         p13.setImgUrl("img-url");
         p13.setName("Tommy Hilfiger");
         p13.setPrice(new BigDecimal(419.00));
@@ -255,8 +246,7 @@ public class ProductListGenerator {
         description.setName("Opis");
         description.setValue("Jeansowa koszula z kołnierzykiem.");
         p14.setCategory(new Category("Koszule",
-                                     new ArrayList<>(Collections.singletonList(new Category("Męskie",
-                                                                                            new ArrayList<>())))));
+                new ArrayList<>(Collections.singletonList(new Category("Męskie", new ArrayList<>())))));
         p14.setImgUrl("img-url");
         p14.setName("Lee");
         p14.setPrice(new BigDecimal(309.00));
@@ -272,8 +262,7 @@ public class ProductListGenerator {
         description.setName("Opis");
         description.setValue("Trampki Superstar.");
         p15.setCategory(new Category("Buty",
-                                     new ArrayList<>(Collections.singletonList(new Category("Damskie",
-                                                                                            new ArrayList<>())))));
+                new ArrayList<>(Collections.singletonList(new Category("Damskie", new ArrayList<>())))));
         p15.setImgUrl("img-url");
         p15.setName("Adidas");
         p15.setPrice(new BigDecimal(399.00));

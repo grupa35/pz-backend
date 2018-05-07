@@ -1,30 +1,27 @@
 package pl.shopgen.models;
 
 
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import org.junit.After;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 public abstract class SimpleMongoRepositoryTest<T extends SimpleObject, R extends MongoRepository<T, String>> {
 
-    private T savedObject;
+    protected T savedObject;
 
-    private List<T> savedObjects;
+    protected List<T> savedObjects;
 
     @Autowired
-    private R repository;
-
-    public abstract T getObject();
-    public abstract List<T> getObjects();
-    public abstract T getChangedObject(T object);
+    protected R repository;
 
     @Test
     public void saveAndFindObject() {
@@ -36,6 +33,8 @@ public abstract class SimpleMongoRepositoryTest<T extends SimpleObject, R extend
     private void saveObject() {
         savedObject = repository.save(getObject());
     }
+
+    public abstract T getObject();
 
     @Test
     public void deleteObject() {
@@ -52,10 +51,12 @@ public abstract class SimpleMongoRepositoryTest<T extends SimpleObject, R extend
         T updatedObject;
         T changedObject = getChangedObject(savedObject);
 
-        updatedObject =  repository.save(changedObject);
+        updatedObject = repository.save(changedObject);
 
         assertEquals(changedObject, updatedObject);
     }
+
+    public abstract T getChangedObject(T object);
 
     @Test
     public void findAll() {
@@ -64,13 +65,17 @@ public abstract class SimpleMongoRepositoryTest<T extends SimpleObject, R extend
         Iterable<T> foundedObjects;
         List<T> foundedObjectList = new ArrayList<>();
 
-        foundedObjects = repository.findAllById(savedObjects.stream()
-                                                                     .map(T::getId)
-                                                                     .collect(Collectors.toList()));
+        foundedObjects = repository.findAllById(savedObjects.stream().map(T::getId).collect(Collectors.toList()));
 
         foundedObjects.forEach(foundedObjectList::add);
         assertEquals(savedObjects, foundedObjectList);
     }
+
+    private void saveManyObjects() {
+        savedObjects = repository.saveAll(getObjects());
+    }
+
+    public abstract List<T> getObjects();
 
     @Test
     public void deleteAll() {
@@ -78,13 +83,12 @@ public abstract class SimpleMongoRepositoryTest<T extends SimpleObject, R extend
         Iterable<T> foundedObjects;
 
         repository.deleteAll(savedObjects);
-        foundedObjects = repository.findAllById(savedObjects.stream()
-                                                                     .map(T::getId)
-                                                                     .collect(Collectors.toList()));
+        foundedObjects = repository.findAllById(savedObjects.stream().map(T::getId).collect(Collectors.toList()));
         assertFalse(foundedObjects.iterator().hasNext());
     }
 
-    private void saveManyObjects() {
-        savedObjects = repository.saveAll(getObjects());
+    @After
+    public void clean() {
+        repository.deleteAll();
     }
 }
