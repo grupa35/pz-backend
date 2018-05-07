@@ -20,6 +20,7 @@ public class Search {
     public Search(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
+
     public static BigDecimal createBigDecimal(String str) {
         if (str == null) {
             return null;
@@ -30,20 +31,20 @@ public class Search {
 
     @RequestMapping(value = {"", " "}, method = RequestMethod.GET)
     @ResponseBody
-    List<Product> search(@RequestParam Map<String,String> allRequestParams) {
+    List<Product> search(@RequestParam Map<String, String> allRequestParams) {
         List<Product> productList = new ArrayList<Product>();
         BigDecimal higherPrice;
         BigDecimal lowerPrice;
-        String  productName = allRequestParams.getOrDefault("name", null);
-        String  idCategory =allRequestParams.getOrDefault("category",null);
-        String lowerPriceString = allRequestParams.getOrDefault("lowerPrice",null);
-        String  higherPriceString =allRequestParams.getOrDefault("higherPrice",null);
-        lowerPrice=createBigDecimal(lowerPriceString);
+        String productName = allRequestParams.getOrDefault("name", null);
+        String idCategory = allRequestParams.getOrDefault("category", null);
+        String lowerPriceString = allRequestParams.getOrDefault("lowerPrice", null);
+        String higherPriceString = allRequestParams.getOrDefault("higherPrice", null);
+        lowerPrice = createBigDecimal(lowerPriceString);
         higherPrice = createBigDecimal(higherPriceString);
-        Predicate<Product> nameFilter = p ->   productName == null ? true :  p.getName().equalsIgnoreCase(productName);
-        Predicate<Product> categoryFilter = p ->   idCategory == null ? true :  p.getCategory().getId().equals(idCategory);
-        Predicate<Product> priceFilterLower = p ->   lowerPrice == null ? true :  p.getPrice().compareTo(lowerPrice)==1||p.getPrice().compareTo(lowerPrice)==0;
-        Predicate<Product> priceFilterHigher = p -> higherPrice == null ? true :  p.getPrice().compareTo(higherPrice)==-1||p.getPrice().compareTo(higherPrice)==0;
+        Predicate<Product> nameFilter = p -> productName == null ? true : p.getName().equalsIgnoreCase(productName);
+        Predicate<Product> categoryFilter = p -> idCategory == null ? true : p.getCategory().getId().equals(idCategory);
+        Predicate<Product> priceFilterLower = p -> lowerPrice == null ? true : p.getPrice().compareTo(lowerPrice)>= 0;
+        Predicate<Product> priceFilterHigher = p -> higherPrice == null ? true : p.getPrice().compareTo(higherPrice)<= 0;
         productList = productRepository.findAll()
                 .stream()
                 .filter(nameFilter)
