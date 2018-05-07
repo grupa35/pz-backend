@@ -16,13 +16,9 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/search")
 public class Search {
-    private final CategoryRepository categoryRepository;
-    private final ProductRepository productRepository;
     private final ProductController productController;
 
     public Search(CategoryRepository categoryRepository, ProductRepository productRepository, ProductController productController) {
-        this.categoryRepository = categoryRepository;
-        this.productRepository = productRepository;
         this.productController = productController;
     }
 
