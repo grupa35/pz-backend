@@ -42,8 +42,8 @@ public class Search {
         higherPrice = createBigDecimal(higherPriceString);
         Predicate<Product> nameFilter = p ->   productName == null ? true :  p.getName().equalsIgnoreCase(productName);
         Predicate<Product> categoryFilter = p ->   idCategory == null ? true :  p.getCategory().getId().equals(idCategory);
-        Predicate<Product> priceFilterLower = p ->   lowerPrice == null ? true :  p.getPrice().compareTo(lowerPrice)==1;
-        Predicate<Product> priceFilterHigher = p -> higherPrice == null ? true :  p.getPrice().compareTo(higherPrice)==-1;
+        Predicate<Product> priceFilterLower = p ->   lowerPrice == null ? true :  p.getPrice().compareTo(lowerPrice)==1||p.getPrice().compareTo(lowerPrice)==0;
+        Predicate<Product> priceFilterHigher = p -> higherPrice == null ? true :  p.getPrice().compareTo(higherPrice)==-1||p.getPrice().compareTo(higherPrice)==0;
         productList = productRepository.findAll()
                 .stream()
                 .filter(nameFilter)
