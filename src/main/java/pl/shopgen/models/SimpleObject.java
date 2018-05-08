@@ -3,13 +3,11 @@ package pl.shopgen.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.lang.Nullable;
 
 @Document
 public abstract class SimpleObject {
 
     @Id
-    @Nullable
     private String id;
 
     @Override

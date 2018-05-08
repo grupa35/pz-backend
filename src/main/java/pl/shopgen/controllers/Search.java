@@ -1,7 +1,10 @@
 package pl.shopgen.controllers;
 
-import javafx.util.converter.BigDecimalStringConverter;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import pl.shopgen.models.Product;
 import pl.shopgen.models.ProductRepository;
 
@@ -20,14 +23,6 @@ public class Search {
     public Search(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
-
-    public static BigDecimal createBigDecimal(String str) {
-        if (str == null) {
-            return null;
-        }
-        return new BigDecimal(str);
-    }
-
 
     @RequestMapping(value = {"", " "}, method = RequestMethod.GET)
     @ResponseBody
@@ -52,7 +47,16 @@ public class Search {
                 .filter(priceFilterLower)
                 .filter(priceFilterHigher)
                 .collect(Collectors.toList());
+
+
         return productList;
+    }
+
+    public static BigDecimal createBigDecimal(String str) {
+        if(str == null) {
+            return null;
+        }
+        return new BigDecimal(str);
     }
 
 }
