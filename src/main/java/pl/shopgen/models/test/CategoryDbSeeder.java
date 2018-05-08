@@ -44,7 +44,7 @@ public class CategoryDbSeeder implements CommandLineRunner {
 
         Category spodnie_k = new Category("spodnie", Collections.emptyList());
 
-        Category kobieta_k = new Category("kobieta", Arrays.asList(koszule_sukienki_k, spodnie_k, sukienki_k));
+        Category kobieta_k = new Category("kobieta", Arrays.asList(koszule_sukienki_k, spodnie_k, sukienki_k, spodnice_k));
         /////////
         Category tshirt_m = new Category("t-shirt", Collections.emptyList());
 
@@ -98,42 +98,9 @@ public class CategoryDbSeeder implements CommandLineRunner {
         categoryRepository.deleteAll();
 
         //add data to the database
-        List<Category> category = Arrays.asList(tshirt_k,
-                koszule_k,
-                top_k,
-                bluzki_k,
-                koszule_sukienki_k,
-                koktajlowe_k,
-                wieczorowe_k,
-                sukienki_k,
-                mini_k,
-                maxi_k,
-                spodnice_k,
-                spodnie_k,
+        List<Category> category = Arrays.asList(
                 kobieta_k,
-                tshirt_m,
-                koszule_m,
-                koszulki_polo_m,
-                koszule_koszulki_m,
-                jeansy_m,
-                bermudy_m,
-                spodnie_m,
-                swetry_m,
-                marynarki_m,
                 mezczyzna_m,
-                od_zera_do_trzech_miesiecy_d,
-                od_czterech_do_dwunastu_miesiecy_d,
-                od_roku_do_czterech_lat_d,
-                od_pieciu_do_czternastu_lat_d,
-                dziewczynka_d,
-                od_zera_do_trzech_miesiecy_c,
-                od_czterech_do_dwunastu_miesiecy_c,
-                od_roku_do_czterech_lat_c,
-                od_pieciu_do_czternastu_lat_c,
-                chlopiec_c,
-                chlopiece_c,
-                dziewczece_d,
-                buty_d,
                 dziecko_d);
         for (Category data : category) {
             categoryRepository.save(data);
