@@ -2,6 +2,7 @@ package pl.shopgen.models;
 
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.stream.IntStream;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles("test")
 public class DescriptionRepositoryTest extends SimpleMongoRepositoryTest <Description, DescriptionRepository> {
 
     @Override

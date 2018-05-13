@@ -1,10 +1,5 @@
 package pl.shopgen.provider;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.util.Arrays;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,17 +7,23 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import pl.shopgen.models.Product;
 import pl.shopgen.models.ProductRepository;
 import pl.shopgen.models.Sale;
 import pl.shopgen.models.SaleRepository;
 import pl.shopgen.models.mocks.ProductListGenerator;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.util.Arrays;
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles("test")
 public class ProductPriceProviderTest {
 
     private IProductPriceProvider productPriceProvider;
