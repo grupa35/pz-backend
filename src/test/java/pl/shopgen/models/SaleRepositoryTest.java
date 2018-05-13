@@ -26,6 +26,9 @@ public class SaleRepositoryTest extends SimpleMongoRepositoryTest<Sale, SaleRepo
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     private Product insertedProduct;
 
     private SalesGenerator salesGenerator;
@@ -43,7 +46,7 @@ public class SaleRepositoryTest extends SimpleMongoRepositoryTest<Sale, SaleRepo
     }
 
     private Product getProduct() {
-        ProductListGenerator productListGenerator = new ProductListGenerator();
+        ProductListGenerator productListGenerator = new ProductListGenerator(categoryRepository);
         Product product = productListGenerator.generateProducts().get(0);
         product.setPrice(new BigDecimal(1000.0));
 
