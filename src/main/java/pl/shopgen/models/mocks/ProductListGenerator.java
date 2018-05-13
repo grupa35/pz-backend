@@ -29,7 +29,9 @@ public class ProductListGenerator {
     }
 
     public List<Product> generateProducts() {
-
+        products.clear();
+        categories.clear();
+        categories.addAll(categoryRepository.findAll());
         /* Produkt 1 */
         //        kobieta -> koszule sukienki
         p1 = new Product();
@@ -290,7 +292,7 @@ public class ProductListGenerator {
         if(categoryNames.length < 1) {
             return null;
         } else if(categoryNames.length > 1) {
-            getCategoryByNameRec(currentCategories.stream()
+            return getCategoryByNameRec(currentCategories.stream()
                             .filter(category -> category.getName().equalsIgnoreCase(categoryNames[0]))
                             .findFirst()
                             .map(Category::getSubcategories)
