@@ -19,11 +19,8 @@ public class ProductsGeneratorController {
 
     private final ProductRepository productRepository;
 
-    private final CategoryRepository categoryRepository;
-
     public ProductsGeneratorController(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
         productListGenerator = new ProductListGenerator(categoryRepository);
     }
 
