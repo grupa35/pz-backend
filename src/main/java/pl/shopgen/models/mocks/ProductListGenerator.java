@@ -1,37 +1,42 @@
 package pl.shopgen.models.mocks;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import pl.shopgen.models.Category;
+import pl.shopgen.models.CategoryRepository;
 import pl.shopgen.models.Description;
 import pl.shopgen.models.Product;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ProductListGenerator {
 
+    private CategoryRepository categoryRepository;
 
     private List<Product> products = new ArrayList<>();
 
     private Description description = new Description();
 
+    private List<Category> categories = new ArrayList<>();
+
     private Product p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15;
 
 
-    public ProductListGenerator() {
+    public ProductListGenerator(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+        categories.addAll(categoryRepository.findAll());
     }
 
     public List<Product> generateProducts() {
 
         /* Produkt 1 */
+        //        kobieta -> koszule sukienki
         p1 = new Product();
         description.setName("Opis");
         description.setValue("Sukienka z dekoltem w serek.");
 
-        p1.setCategory(new Category("Sukienki",
-                new ArrayList<>(Collections.singletonList(new Category("Damskie", new ArrayList<>())))));
+        p1.setCategory(getCategoryByName("kobieta", "sukienki", "wieczorowe"));
         p1.setImgUrl("img-url");
         p1.setName("New Look");
         p1.setPrice(new BigDecimal(79.90));
@@ -51,8 +56,7 @@ public class ProductListGenerator {
         p2 = new Product();
         description.setName("Opis");
         description.setValue("Dłuższa marynarka z elastycznej takniny.");
-        p2.setCategory(new Category("Marynarki i kamizelki",
-                new ArrayList<>(Collections.singletonList(new Category("Damskie", new ArrayList<>())))));
+        p2.setCategory(getCategoryByName("kobieta"));
         p2.setImgUrl("img-url");
         p2.setName("Topshop");
         p2.setPrice(new BigDecimal(149.90));
@@ -72,8 +76,7 @@ public class ProductListGenerator {
         p3 = new Product();
         description.setName("Opis");
         description.setValue("Szorty z bawełnianej popeliny ze sznurkiem.");
-        p3.setCategory(new Category("1,5 - 10 lat",
-                new ArrayList<>(Collections.singletonList(new Category("Dzieciece", new ArrayList<>())))));
+        p3.setCategory(getCategoryByName("dziecko", "chlopiec", "1 - 4 lata"));
         p3.setImgUrl("img-url");
         p3.setName("Benetton");
         p3.setPrice(new BigDecimal(29.90));
@@ -92,8 +95,7 @@ public class ProductListGenerator {
         p4 = new Product();
         description.setName("Opis");
         description.setValue("Sznurowane buty z bawełny.");
-        p4.setCategory(new Category("Buty",
-                new ArrayList<>(Collections.singletonList(new Category("Męskie", new ArrayList<>())))));
+        p4.setCategory(getCategoryByName("mezczyzna"));
         p4.setImgUrl("img-url");
         p4.setName("Adidas");
         p4.setPrice(new BigDecimal(299.00));
@@ -106,8 +108,7 @@ public class ProductListGenerator {
         p5 = new Product();
         description.setName("Opis");
         description.setValue("Bawełniana koszulka z kieszenią.");
-        p5.setCategory(new Category("T-shirt",
-                new ArrayList<>(Collections.singletonList(new Category("Męskie", new ArrayList<>())))));
+        p5.setCategory(getCategoryByName("mezczyzna", "koszule/koszulki", "koszule"));
         p5.setImgUrl("img-url");
         p5.setName("Nike");
         p5.setPrice(new BigDecimal(79.99));
@@ -121,8 +122,7 @@ public class ProductListGenerator {
         p6 = new Product();
         description.setName("Opis");
         description.setValue("Jeansy z postrzępionymi nogawkami.");
-        p6.setCategory(new Category("Jeansy",
-                new ArrayList<>(Collections.singletonList(new Category("Damskie", new ArrayList<>())))));
+        p6.setCategory(getCategoryByName("kobieta", "spodnie"));
         p6.setImgUrl("img-url");
         p6.setName("Levi's");
         p6.setPrice(new BigDecimal(99.99));
@@ -137,8 +137,7 @@ public class ProductListGenerator {
         p7 = new Product();
         description.setName("Opis");
         description.setValue("Jednoczęściowy strój kąpielowy z roślinnym motywem");
-        p7.setCategory(new Category("Stroje kąpielowe",
-                new ArrayList<>(Collections.singletonList(new Category("Damskie", new ArrayList<>())))));
+        p7.setCategory(getCategoryByName("kobieta"));
         p7.setImgUrl("img-url");
         p7.setName("O'Nell");
         p7.setPrice(new BigDecimal(79.99));
@@ -153,8 +152,7 @@ public class ProductListGenerator {
         p8 = new Product();
         description.setName("Opis");
         description.setValue("Piżama z nadrukiem.");
-        p8.setCategory(new Category("Piżamy",
-                new ArrayList<>(Collections.singletonList(new Category("Damskie", new ArrayList<>())))));
+        p8.setCategory(getCategoryByName("kobieta"));
         p8.setImgUrl("img-url");
         p8.setName("OYSHO");
         p8.setPrice(new BigDecimal(79.99));
@@ -169,8 +167,7 @@ public class ProductListGenerator {
         p9 = new Product();
         description.setName("Opis");
         description.setValue("Kurtka z nadrukiem BOHO z motywami roslinnymi.");
-        p9.setCategory(new Category("2 - 8 lat",
-                new ArrayList<>(Collections.singletonList(new Category("Dzieciece", new ArrayList<>())))));
+        p9.setCategory(getCategoryByName("dzieciece", "5 - 14 lata"));
         p9.setImgUrl("img-url");
         p9.setName("mint&berry");
         p9.setPrice(new BigDecimal(69.99));
@@ -187,8 +184,7 @@ public class ProductListGenerator {
         p10 = new Product();
         description.setName("Opis");
         description.setValue("Torba na ramię.");
-        p10.setCategory(new Category("Torebki",
-                new ArrayList<>(Collections.singletonList(new Category("Damskie", new ArrayList<>())))));
+        p10.setCategory(getCategoryByName("kobieta"));
         p10.setImgUrl("img-url");
         p10.setName("RIVER ISLAND");
         p10.setPrice(new BigDecimal(149.00));
@@ -199,8 +195,7 @@ public class ProductListGenerator {
         p11 = new Product();
         description.setName("Opis");
         description.setValue("Spódnica z zakładką.");
-        p11.setCategory(new Category("Spódnica",
-                new ArrayList<>(Collections.singletonList(new Category("Damskie", new ArrayList<>())))));
+        p11.setCategory(getCategoryByName("kobieta", "spodnice", "mini"));
         p11.setImgUrl("img-url");
         p11.setName("New Look");
         p11.setPrice(new BigDecimal(84.00));
@@ -217,8 +212,7 @@ public class ProductListGenerator {
         p12 = new Product();
         description.setName("Opis");
         description.setValue("Portfel skórzany czarny.");
-        p12.setCategory(new Category("Portfele",
-                new ArrayList<>(Collections.singletonList(new Category("Męskie", new ArrayList<>())))));
+        p12.setCategory(getCategoryByName("mezczyzna"));
         p12.setImgUrl("img-url");
         p12.setName("Calvin Klein");
         p12.setPrice(new BigDecimal(249.00));
@@ -228,9 +222,8 @@ public class ProductListGenerator {
         /* Produkt 13 */
         p13 = new Product();
         description.setName("Opis");
-        description.setValue("Bluza z kapturem z kieszenią z przodu.");
-        p13.setCategory(new Category("Bluzy i swetry",
-                new ArrayList<>(Collections.singletonList(new Category("Męskie", new ArrayList<>())))));
+        description.setValue("Sweter z kapturem z kieszenią z przodu.");
+        p13.setCategory(getCategoryByName("mezczyzna", "swetry"));
         p13.setImgUrl("img-url");
         p13.setName("Tommy Hilfiger");
         p13.setPrice(new BigDecimal(419.00));
@@ -245,8 +238,7 @@ public class ProductListGenerator {
         p14 = new Product();
         description.setName("Opis");
         description.setValue("Jeansowa koszula z kołnierzykiem.");
-        p14.setCategory(new Category("Koszule",
-                new ArrayList<>(Collections.singletonList(new Category("Męskie", new ArrayList<>())))));
+        p14.setCategory(getCategoryByName("mezczyzna", "koszule/koszulki", "koszule"));
         p14.setImgUrl("img-url");
         p14.setName("Lee");
         p14.setPrice(new BigDecimal(309.00));
@@ -261,8 +253,7 @@ public class ProductListGenerator {
         p15 = new Product();
         description.setName("Opis");
         description.setValue("Trampki Superstar.");
-        p15.setCategory(new Category("Buty",
-                new ArrayList<>(Collections.singletonList(new Category("Damskie", new ArrayList<>())))));
+        p15.setCategory(getCategoryByName("kobieta"));
         p15.setImgUrl("img-url");
         p15.setName("Adidas");
         p15.setPrice(new BigDecimal(399.00));
@@ -288,4 +279,28 @@ public class ProductListGenerator {
         return products;
     }
 
+    private Category getCategoryByName(String... categoryNames) {
+        if(categoryNames.length < 1) {
+            return null;
+        }
+        return getCategoryByNameRec(categories, categoryNames);
+    }
+
+    private Category getCategoryByNameRec(List<Category> currentCategories, String... categoryNames) {
+        if(categoryNames.length < 1) {
+            return null;
+        } else if(categoryNames.length > 1) {
+            getCategoryByNameRec(currentCategories.stream()
+                            .filter(category -> category.getName().equalsIgnoreCase(categoryNames[0]))
+                            .findFirst()
+                            .map(Category::getSubcategories)
+                            .orElse(new ArrayList<>()),
+                    Arrays.copyOfRange(categoryNames, 1, categoryNames.length));
+        }
+
+        return currentCategories.stream()
+                .filter(category -> category.getName().equalsIgnoreCase(categoryNames[0]))
+                .findFirst()
+                .orElse(null);
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import pl.shopgen.models.CategoryRepository;
 import pl.shopgen.models.Product;
 import pl.shopgen.models.ProductRepository;
 import pl.shopgen.models.Sale;
@@ -34,6 +35,9 @@ public class ProductPriceProviderTest {
     private ProductRepository productRepository;
 
     @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
     private SaleRepository saleRepository;
 
     @Before
@@ -43,7 +47,7 @@ public class ProductPriceProviderTest {
     }
 
     private void initProduct() {
-        ProductListGenerator productListGenerator = new ProductListGenerator();
+        ProductListGenerator productListGenerator = new ProductListGenerator(categoryRepository);
         insertedProduct = productRepository.insert(productListGenerator.generateProducts().get(0));
     }
 
