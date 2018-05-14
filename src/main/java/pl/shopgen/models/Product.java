@@ -1,11 +1,11 @@
 package pl.shopgen.models;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class Product extends SimpleObject {
@@ -90,7 +90,7 @@ public class Product extends SimpleObject {
     }
 
     public BigDecimal getPrice() {
-        return price.setScale(2, RoundingMode.HALF_DOWN);
+        return price.setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public void setPrice(BigDecimal price) {

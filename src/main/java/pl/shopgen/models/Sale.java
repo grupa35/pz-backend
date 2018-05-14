@@ -19,6 +19,8 @@ public class Sale extends SimpleObject {
 
     private boolean active;
 
+    private SaleType saleType;
+
     public Sale() {
     }
 
@@ -31,8 +33,10 @@ public class Sale extends SimpleObject {
             startDate = other.startDate;
             endDate = other.endDate;
             active = other.active;
+            saleType = other.saleType;
         }
     }
+
 
     @Override
     public int hashCode() {
@@ -46,6 +50,7 @@ public class Sale extends SimpleObject {
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         result = 31 * result + (active ? 1 : 0);
+        result = 31 * result + (saleType != null ? saleType.hashCode() : 0);
         return result;
     }
 
@@ -81,6 +86,10 @@ public class Sale extends SimpleObject {
         if(startDate != null ? !startDate.equals(sale.startDate) : sale.startDate != null) {
             return false;
         }
+        if(saleType != null ? !saleType.equals(sale.saleType) : sale.saleType != null) {
+            return false;
+        }
+
         return endDate != null ? endDate.equals(sale.endDate) : sale.endDate == null;
     }
 
@@ -138,5 +147,13 @@ public class Sale extends SimpleObject {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public SaleType getSaleType() {
+        return saleType;
+    }
+
+    public void setSaleType(SaleType saleType) {
+        this.saleType = saleType;
     }
 }
