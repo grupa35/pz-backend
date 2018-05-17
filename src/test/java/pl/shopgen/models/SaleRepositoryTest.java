@@ -79,6 +79,7 @@ public class SaleRepositoryTest extends SimpleMongoRepositoryTest<Sale, SaleRepo
         objectToChange.setStartDate(LocalDate.now().minusDays(10));
         objectToChange.setActive(!object.isActive());
         objectToChange.setCode("987654321");
+        objectToChange.setSaleType(object.getSaleType());
         return objectToChange;
     }
 

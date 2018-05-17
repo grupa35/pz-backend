@@ -38,6 +38,7 @@ dependencies {
     providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     compile('org.springframework.boot:spring-boot-starter-data-mongodb')
+    compile('nl.jqno.equalsverifier:equalsverifier:2.4.6')
 }
 
 compileJava.dependsOn(processResources)
