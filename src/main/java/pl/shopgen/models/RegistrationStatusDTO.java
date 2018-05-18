@@ -4,6 +4,10 @@ public class RegistrationStatusDTO {
 
     private int resultCode;
 
+    public RegistrationStatusDTO(int resultCode) {
+        this.resultCode = resultCode;
+    }
+
     public RegistrationStatusDTO(RegistrationStatusDTO other) {
         if (other != null) {
             resultCode = other.resultCode;
@@ -11,25 +15,22 @@ public class RegistrationStatusDTO {
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + resultCode;
-        return result;
+    final public int hashCode() {
+        return resultCode;
     }
 
     @Override
-    public boolean equals(Object o) {
+    final public boolean equals(Object o) {
         if(this == o) {
             return true;
         }
-        if(o == null || getClass() != o.getClass()) {
+        if(!(o instanceof RegistrationStatusDTO)) {
             return false;
         }
-        if(!super.equals(o)) {
-            return false;
-        }
-        RegistrationStatusDTO registrationStatusDTO = (RegistrationStatusDTO) o;
-        return Integer.compare(registrationStatusDTO.resultCode, resultCode) != 0;
+
+        RegistrationStatusDTO that = (RegistrationStatusDTO) o;
+
+        return resultCode == that.resultCode;
     }
 
     public int getResultCode() {

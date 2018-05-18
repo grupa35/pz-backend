@@ -4,9 +4,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class UserDTO {
+
     private String id;
+
     private String name;
+
     private String surname;
+
     private String email;
 
     public UserDTO(String id, String name, String surname, String email) {
