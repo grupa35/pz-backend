@@ -8,20 +8,18 @@ import java.util.Arrays;
 public class User extends SimpleObject {
     private String name;
     private String surname;
-    private char [] password;
+    private String password;
     private String email;
-    private String address;
     private Role role;
 
     public User() {
     }
 
-    public User(String name, String surname, char[] password, String email, String address, Role role) {
+    public User(String name, String surname, String password, String email, Role role) {
         this.name = name;
         this.surname = surname;
         this.password = password;
         this.email = email;
-        this.address = address;
         this.role = role;
     }
 
@@ -46,11 +44,11 @@ public class User extends SimpleObject {
         this.surname = surname;
     }
 
-    public char[] getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(char[] password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -60,14 +58,6 @@ public class User extends SimpleObject {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public Role getRole() {
@@ -88,9 +78,8 @@ public class User extends SimpleObject {
 
         if (name != null ? !name.equals(user.name) : user.name != null) return false;
         if (surname != null ? !surname.equals(user.surname) : user.surname != null) return false;
-        if (!Arrays.equals(password, user.password)) return false;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
-        if (address != null ? !address.equals(user.address) : user.address != null) return false;
         return role != null ? role.equals(user.role) : user.role == null;
     }
 
@@ -99,9 +88,8 @@ public class User extends SimpleObject {
         int result = super.hashCode();
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
-        result = 31 * result + Arrays.hashCode(password);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
         return result;
     }
