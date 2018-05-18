@@ -38,7 +38,7 @@ public class SaleDTO {
     }
 
     @Override
-    public int hashCode() {
+    final public int hashCode() {
         int result;
         long temp;
         result = (isSale ? 1 : 0);
@@ -53,7 +53,7 @@ public class SaleDTO {
     }
 
     @Override
-    public boolean equals(Object o) {
+    final public boolean equals(Object o) {
         if(this == o) {
             return true;
         }

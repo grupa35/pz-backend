@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Document
-public class Category extends SimpleObject {
+public class Category implements SimpleObject {
+
+    private String id;
 
     private String name;
 
@@ -16,34 +18,6 @@ public class Category extends SimpleObject {
     public Category(String name, List<Category> subcategories) {
         this.name = name;
         this.subcategories.addAll(subcategories);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + subcategories.hashCode();
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if(this == o) {
-            return true;
-        }
-        if(!(o instanceof Category)) {
-            return false;
-        }
-        if(!super.equals(o)) {
-            return false;
-        }
-
-        Category category = (Category) o;
-
-        if(name != null ? !name.equals(category.name) : category.name != null) {
-            return false;
-        }
-        return subcategories.equals(category.subcategories);
     }
 
     public Category getSubCategoryById(String categoryId) {
@@ -67,6 +41,33 @@ public class Category extends SimpleObject {
         return foundedCategory;
     }
 
+    @Override
+    final public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (subcategories != null ? subcategories.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    final public boolean equals(Object o) {
+        if(this == o) {
+            return true;
+        }
+        if(!(o instanceof Category)) {
+            return false;
+        }
+
+        Category category = (Category) o;
+
+        if(id != null ? !id.equals(category.id) : category.id != null) {
+            return false;
+        }
+        if(name != null ? !name.equals(category.name) : category.name != null) {
+            return false;
+        }
+        return subcategories != null ? subcategories.equals(category.subcategories) : category.subcategories == null;
+    }
 
     public String getName() {
         return name;
@@ -76,6 +77,16 @@ public class Category extends SimpleObject {
         this.name = name;
     }
 
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public List<Category> getSubcategories() {
         return subcategories;
     }
@@ -83,5 +94,4 @@ public class Category extends SimpleObject {
     public void setSubcategories(List<Category> subcategories) {
         this.subcategories = subcategories;
     }
-
 }

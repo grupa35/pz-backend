@@ -7,10 +7,9 @@ import org.junit.Test;
 public class SaleTest {
 
     @Test
-    public void equalsTest()
+    public void equalsContractTest()
     {
         EqualsVerifier.forClass(Sale.class)
-                .suppress(Warning.STRICT_INHERITANCE)
                 .suppress(Warning.NONFINAL_FIELDS)
                 .verify();
     }

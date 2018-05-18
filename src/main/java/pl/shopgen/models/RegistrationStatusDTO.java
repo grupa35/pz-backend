@@ -1,6 +1,6 @@
 package pl.shopgen.models;
 
-public class RegistrationStatusDTO extends SimpleObject {
+public class RegistrationStatusDTO {
 
     private int resultCode;
 
@@ -19,9 +19,15 @@ public class RegistrationStatusDTO extends SimpleObject {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if(this == o) {
+            return true;
+        }
+        if(o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if(!super.equals(o)) {
+            return false;
+        }
         RegistrationStatusDTO registrationStatusDTO = (RegistrationStatusDTO) o;
         return Integer.compare(registrationStatusDTO.resultCode, resultCode) != 0;
     }

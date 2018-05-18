@@ -3,22 +3,49 @@ package pl.shopgen.models;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class UserDTO extends SimpleObject {
-    private int id;
+public class UserDTO {
+    private String id;
     private String name;
     private String surname;
     private String email;
 
-    public UserDTO(int id, String name, String surname, String email) {
+    public UserDTO(String id, String name, String surname, String email) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
     }
 
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (surname != null ? surname.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        return result;
+    }
 
-    public void setId(int id) {
-        this.id = id;
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) {
+            return true;
+        }
+        if(!(o instanceof UserDTO)) {
+            return false;
+        }
+
+        UserDTO userDTO = (UserDTO) o;
+
+        if(id != null ? !id.equals(userDTO.id) : userDTO.id != null) {
+            return false;
+        }
+        if(name != null ? !name.equals(userDTO.name) : userDTO.name != null) {
+            return false;
+        }
+        if(surname != null ? !surname.equals(userDTO.surname) : userDTO.surname != null) {
+            return false;
+        }
+        return email != null ? email.equals(userDTO.email) : userDTO.email == null;
     }
 
     public String getName() {
@@ -45,27 +72,11 @@ public class UserDTO extends SimpleObject {
         this.email = email;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-
-        UserDTO userDTO = (UserDTO) o;
-
-        if (id != userDTO.id) return false;
-        if (name != null ? !name.equals(userDTO.name) : userDTO.name != null) return false;
-        if (surname != null ? !surname.equals(userDTO.surname) : userDTO.surname != null) return false;
-        return email != null ? email.equals(userDTO.email) : userDTO.email == null;
+    public String getId() {
+        return id;
     }
 
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (surname != null ? surname.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        return result;
+    public void setId(String id) {
+        this.id = id;
     }
 }

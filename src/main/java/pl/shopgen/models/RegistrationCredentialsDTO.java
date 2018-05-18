@@ -1,9 +1,7 @@
 package pl.shopgen.models;
 
 
-import java.util.Objects;
-
-public class RegistrationCredentialsDTO extends SimpleObject {
+public class RegistrationCredentialsDTO {
 
 
     private String name;
