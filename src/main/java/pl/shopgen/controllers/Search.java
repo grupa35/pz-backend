@@ -65,7 +65,7 @@ public class Search {
 
         public ProductFiltersBuilder name() {
             String productName = allRequestParams.getOrDefault("name", null);
-            productFilters.add(product -> productName == null || product.getName().equalsIgnoreCase(productName));
+            productFilters.add(product -> productName == null || product.getName().toLowerCase().contains(productName.toLowerCase()));
             return this;
         }
 
