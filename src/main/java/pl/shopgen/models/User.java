@@ -1,9 +1,13 @@
 package pl.shopgen.models;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 @Document
-public class User implements SimpleObject {
+public class User implements SimpleObject, UserDetails {
     private String id;
     private String name;
     private String surname;
@@ -12,9 +16,25 @@ public class User implements SimpleObject {
     private Role role;
     private boolean enabled = true;
 
+    public User() {
+    }
+
+    public User(String name, String surname, String password, String email, Role role) {
+        this.name = name;
+        this.surname = surname;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
+
+    public User(String name, String surname) {
+        this.name = name;
+        this.surname = surname;
+    }
+
     @Override
-    final public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
+    public int hashCode() {
+        int result = super.hashCode();
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
@@ -25,20 +45,20 @@ public class User implements SimpleObject {
     }
 
     @Override
-    final public boolean equals(Object o) {
+    public boolean equals(Object o) {
         if(this == o) {
             return true;
         }
         if(!(o instanceof User)) {
             return false;
         }
+        if(!super.equals(o)) {
+            return false;
+        }
 
         User user = (User) o;
 
         if(enabled != user.enabled) {
-            return false;
-        }
-        if(id != null ? !id.equals(user.id) : user.id != null) {
             return false;
         }
         if(name != null ? !name.equals(user.name) : user.name != null) {
@@ -54,6 +74,49 @@ public class User implements SimpleObject {
             return false;
         }
         return role != null ? role.equals(user.role) : user.role == null;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getName() {
@@ -96,21 +159,5 @@ public class User implements SimpleObject {
     @Override
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 }

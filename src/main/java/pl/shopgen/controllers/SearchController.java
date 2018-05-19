@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/search")
-public class Search {
+public class SearchController {
 
     private final ProductRepository productRepository;
 
     private final CategoryRepository categoryRepository;
 
-    public Search(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public SearchController(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
