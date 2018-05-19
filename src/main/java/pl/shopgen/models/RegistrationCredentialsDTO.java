@@ -34,7 +34,7 @@ public class RegistrationCredentialsDTO {
     }
 
     @Override
-    public int hashCode() {
+    final public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
@@ -45,7 +45,7 @@ public class RegistrationCredentialsDTO {
     }
 
     @Override
-    public boolean equals(Object o) {
+    final public boolean equals(Object o) {
         if(this == o) {
             return true;
         }
