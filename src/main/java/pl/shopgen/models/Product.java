@@ -1,14 +1,16 @@
 package pl.shopgen.models;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
 @Document
-public class Product extends SimpleObject {
+public class Product implements SimpleObject {
+
+    private String id;
 
     private String name;
 
@@ -24,10 +26,9 @@ public class Product extends SimpleObject {
 
     public Product() {
     }
-
     public Product(Product other) {
         if(other != null) {
-            setId(other.getId());
+            id = other.id;
             name = other.name;
             price = other.price;
             imgUrl = other.imgUrl;
@@ -38,8 +39,8 @@ public class Product extends SimpleObject {
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
+    final public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (imgUrl != null ? imgUrl.hashCode() : 0);
@@ -50,19 +51,19 @@ public class Product extends SimpleObject {
     }
 
     @Override
-    public boolean equals(Object o) {
+    final public boolean equals(Object o) {
         if(this == o) {
             return true;
         }
         if(!(o instanceof Product)) {
             return false;
         }
-        if(!super.equals(o)) {
-            return false;
-        }
 
         Product product = (Product) o;
 
+        if(id != null ? !id.equals(product.id) : product.id != null) {
+            return false;
+        }
         if(name != null ? !name.equals(product.name) : product.name != null) {
             return false;
         }
@@ -81,6 +82,16 @@ public class Product extends SimpleObject {
         return description != null ? description.equals(product.description) : product.description == null;
     }
 
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -90,7 +101,7 @@ public class Product extends SimpleObject {
     }
 
     public BigDecimal getPrice() {
-        return price.setScale(2, RoundingMode.HALF_DOWN);
+        return price.setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public void setPrice(BigDecimal price) {

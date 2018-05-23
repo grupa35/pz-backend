@@ -2,6 +2,7 @@ package pl.shopgen.models.mocks;
 
 import pl.shopgen.models.ProductRepository;
 import pl.shopgen.models.Sale;
+import pl.shopgen.models.SaleType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -44,6 +45,8 @@ public class SalesGenerator {
         sale.setNominalValue(new BigDecimal(random.nextDouble() * 100));
         sale.setPercentValue(random.nextDouble() * 100);
         sale.setProductId(productId);
+        sale.setSaleType(SaleType.values()[random.nextInt(SaleType.values().length)]);
+
         return sale;
     }
 }

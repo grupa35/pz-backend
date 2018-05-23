@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.shopgen.models.mocks.ProductListGenerator;
 import pl.shopgen.models.mocks.SalesGenerator;
@@ -19,10 +20,14 @@ import java.util.Random;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles("test")
 public class SaleRepositoryTest extends SimpleMongoRepositoryTest<Sale, SaleRepository> {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     private Product insertedProduct;
 
@@ -41,7 +46,7 @@ public class SaleRepositoryTest extends SimpleMongoRepositoryTest<Sale, SaleRepo
     }
 
     private Product getProduct() {
-        ProductListGenerator productListGenerator = new ProductListGenerator();
+        ProductListGenerator productListGenerator = new ProductListGenerator(categoryRepository);
         Product product = productListGenerator.generateProducts().get(0);
         product.setPrice(new BigDecimal(1000.0));
 
@@ -74,6 +79,7 @@ public class SaleRepositoryTest extends SimpleMongoRepositoryTest<Sale, SaleRepo
         objectToChange.setStartDate(LocalDate.now().minusDays(10));
         objectToChange.setActive(!object.isActive());
         objectToChange.setCode("987654321");
+        objectToChange.setSaleType(object.getSaleType());
         return objectToChange;
     }
 

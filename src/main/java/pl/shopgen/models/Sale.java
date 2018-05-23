@@ -1,9 +1,14 @@
 package pl.shopgen.models;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class Sale extends SimpleObject {
+@Document
+public class Sale implements SimpleObject {
+
+    private String id;
 
     private String code;
 
@@ -19,11 +24,14 @@ public class Sale extends SimpleObject {
 
     private boolean active;
 
+    private SaleType saleType;
+
     public Sale() {
     }
 
     public Sale(Sale other) {
         if(other != null) {
+            id = other.id;
             code = other.code;
             productId = other.productId;
             percentValue = other.percentValue;
@@ -31,13 +39,15 @@ public class Sale extends SimpleObject {
             startDate = other.startDate;
             endDate = other.endDate;
             active = other.active;
+            saleType = other.saleType;
         }
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
+    final public int hashCode() {
+        int result;
         long temp;
+        result = id != null ? id.hashCode() : 0;
         result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + (productId != null ? productId.hashCode() : 0);
         temp = Double.doubleToLongBits(percentValue);
@@ -46,18 +56,16 @@ public class Sale extends SimpleObject {
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         result = 31 * result + (active ? 1 : 0);
+        result = 31 * result + (saleType != null ? saleType.hashCode() : 0);
         return result;
     }
 
     @Override
-    public boolean equals(Object o) {
+    final public boolean equals(Object o) {
         if(this == o) {
             return true;
         }
         if(!(o instanceof Sale)) {
-            return false;
-        }
-        if(!super.equals(o)) {
             return false;
         }
 
@@ -67,6 +75,9 @@ public class Sale extends SimpleObject {
             return false;
         }
         if(active != sale.active) {
+            return false;
+        }
+        if(id != null ? !id.equals(sale.id) : sale.id != null) {
             return false;
         }
         if(code != null ? !code.equals(sale.code) : sale.code != null) {
@@ -81,7 +92,20 @@ public class Sale extends SimpleObject {
         if(startDate != null ? !startDate.equals(sale.startDate) : sale.startDate != null) {
             return false;
         }
-        return endDate != null ? endDate.equals(sale.endDate) : sale.endDate == null;
+        if(endDate != null ? !endDate.equals(sale.endDate) : sale.endDate != null) {
+            return false;
+        }
+        return saleType == sale.saleType;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getCode() {
@@ -138,5 +162,13 @@ public class Sale extends SimpleObject {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public SaleType getSaleType() {
+        return saleType;
+    }
+
+    public void setSaleType(SaleType saleType) {
+        this.saleType = saleType;
     }
 }
