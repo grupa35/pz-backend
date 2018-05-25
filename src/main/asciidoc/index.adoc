@@ -1,0 +1,78 @@
+= SHOPGEN API DOCUMENTATION
+
+
+== ROLE
+=== Add role
+==== Good request
+.http request
+include::{snippets}/roles/addRole/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/roles/addRole/ok/http-response.adoc[]
+
+.request fields
+include::{snippets}/roles/addRole/ok/request-fields.adoc[]
+
+.response fields
+include::{snippets}/roles/addRole/ok/response-fields.adoc[]
+
+=== Delete role
+==== Good request
+.http request
+include::{snippets}/roles/deleteRole/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/roles/deleteRole/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/roles/deleteRole/ok/response-fields.adoc[]
+
+=== Update role
+==== Good request
+.http request
+include::{snippets}/roles/updateRole/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/roles/updateRole/ok/http-response.adoc[]
+
+.request fields
+include::{snippets}/roles/updateRole/ok/request-fields.adoc[]
+
+.response fields
+include::{snippets}/roles/updateRole/ok/response-fields.adoc[]
+
+
+=== Get role
+==== Good request
+
+.http request
+include::{snippets}/roles/getRole/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/roles/getRole/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/roles/getRole/ok/response-fields.adoc[]
+
+
+==== Bad request: not found
+
+.http request
+include::{snippets}/roles/getRole/not_found/http-request.adoc[]
+
+.http response
+include::{snippets}/roles/getRole/not_found/http-response.adoc[]
+
+=== Get roles
+==== ok
+.http request
+include::{snippets}/roles/getRoles/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/roles/getRoles/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/roles/getRoles/ok/response-fields.adoc[]
+
+
+==== Bad request: not found
