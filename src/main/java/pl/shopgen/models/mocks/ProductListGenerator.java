@@ -1,7 +1,7 @@
 package pl.shopgen.models.mocks;
 
 import pl.shopgen.models.Category;
-import pl.shopgen.models.CategoryRepository;
+import pl.shopgen.repositories.CategoryRepository;
 import pl.shopgen.models.Description;
 import pl.shopgen.models.Product;
 

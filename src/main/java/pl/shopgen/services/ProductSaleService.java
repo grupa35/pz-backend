@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import pl.shopgen.models.Product;
 import pl.shopgen.models.Sale;
 import pl.shopgen.models.SaleDTO;
-import pl.shopgen.models.SaleRepository;
+import pl.shopgen.repositories.SaleRepository;
 import pl.shopgen.models.SaleType;
 
 import java.math.BigDecimal;

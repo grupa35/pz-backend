@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import pl.shopgen.models.Product;
-import pl.shopgen.models.ProductRepository;
+import pl.shopgen.repositories.ProductRepository;
 
 @Service
 public class ProductServiceImpl implements ProductService {

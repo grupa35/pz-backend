@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.shopgen.models.Category;
-import pl.shopgen.models.CategoryRepository;
+import pl.shopgen.repositories.CategoryRepository;
 import pl.shopgen.models.Product;
-import pl.shopgen.models.ProductRepository;
+import pl.shopgen.repositories.ProductRepository;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

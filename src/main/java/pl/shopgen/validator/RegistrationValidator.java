@@ -5,8 +5,8 @@ import org.apache.commons.validator.routines.RegexValidator;
 import pl.shopgen.codes.RegistrationResultCode;
 import pl.shopgen.models.RegistrationCredentialsDTO;
 import pl.shopgen.models.RegistrationStatusDTO;
-import pl.shopgen.models.RoleRepository;
-import pl.shopgen.models.UserRepository;
+import pl.shopgen.repositories.RoleRepository;
+import pl.shopgen.repositories.UserRepository;
 
 public class RegistrationValidator {
 

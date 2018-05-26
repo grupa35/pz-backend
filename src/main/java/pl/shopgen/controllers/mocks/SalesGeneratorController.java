@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import pl.shopgen.models.ProductRepository;
+import pl.shopgen.repositories.ProductRepository;
 import pl.shopgen.models.Sale;
-import pl.shopgen.models.SaleRepository;
+import pl.shopgen.repositories.SaleRepository;
 import pl.shopgen.models.mocks.SalesGenerator;
 
 import java.util.List;

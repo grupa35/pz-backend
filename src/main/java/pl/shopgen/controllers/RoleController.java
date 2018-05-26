@@ -10,7 +10,7 @@ import pl.shopgen.builders.ApiErrorMessageBuilder;
 import pl.shopgen.codes.ApiStatusCode;
 import pl.shopgen.models.Role;
 import pl.shopgen.models.RoleDto;
-import pl.shopgen.models.RoleRepository;
+import pl.shopgen.repositories.RoleRepository;
 
 import java.util.ArrayList;
 import java.util.List;
