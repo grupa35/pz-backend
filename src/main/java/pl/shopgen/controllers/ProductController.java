@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.shopgen.models.Product;
-import pl.shopgen.models.ProductRepository;
+import pl.shopgen.repositories.ProductRepository;
 import pl.shopgen.models.SaleDTO;
 import pl.shopgen.services.IProductSaleService;
 

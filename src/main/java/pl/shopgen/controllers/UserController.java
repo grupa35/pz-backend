@@ -1,8 +1,9 @@
 package pl.shopgen.controllers;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import pl.shopgen.models.User;
-import pl.shopgen.models.UserRepository;
+import pl.shopgen.repositories.UserRepository;
 
 import java.util.List;
 
@@ -11,13 +12,16 @@ import java.util.List;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @RequestMapping(method = RequestMethod.POST)
     User addUser(@RequestBody User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.insert(user);
     }
 

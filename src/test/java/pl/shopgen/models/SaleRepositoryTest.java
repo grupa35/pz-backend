@@ -11,6 +11,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.shopgen.models.mocks.ProductListGenerator;
 import pl.shopgen.models.mocks.SalesGenerator;
+import pl.shopgen.repositories.CategoryRepository;
+import pl.shopgen.repositories.ProductRepository;
+import pl.shopgen.repositories.SaleRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

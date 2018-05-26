@@ -2,7 +2,7 @@ package pl.shopgen.services;
 
 import org.springframework.stereotype.Service;
 import pl.shopgen.models.User;
-import pl.shopgen.models.UserRepository;
+import pl.shopgen.repositories.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
