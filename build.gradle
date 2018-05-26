@@ -30,6 +30,10 @@ group = 'pl.shopgen'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 9
 
+bootWar {
+    from(getBuildDir().toString() + "/asciidoc")
+}
+
 war {
     from(getBuildDir().toString() + "/asciidoc")
 }
