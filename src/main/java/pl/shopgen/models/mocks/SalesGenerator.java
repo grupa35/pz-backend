@@ -1,6 +1,6 @@
 package pl.shopgen.models.mocks;
 
-import pl.shopgen.models.ProductRepository;
+import pl.shopgen.repositories.ProductRepository;
 import pl.shopgen.models.Sale;
 import pl.shopgen.models.SaleType;
 

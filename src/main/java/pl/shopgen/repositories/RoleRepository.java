@@ -1,6 +1,7 @@
-package pl.shopgen.models;
+package pl.shopgen.repositories;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import pl.shopgen.models.Role;
 
 import java.util.Optional;
 

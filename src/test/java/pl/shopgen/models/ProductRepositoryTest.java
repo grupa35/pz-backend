@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import pl.shopgen.repositories.ProductRepository;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

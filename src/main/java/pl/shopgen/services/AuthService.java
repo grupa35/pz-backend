@@ -8,9 +8,9 @@ import pl.shopgen.factory.UserFactory;
 import pl.shopgen.models.RegistrationCredentialsDTO;
 import pl.shopgen.models.RegistrationStatusDTO;
 import pl.shopgen.models.Role;
-import pl.shopgen.models.RoleRepository;
+import pl.shopgen.repositories.RoleRepository;
 import pl.shopgen.models.User;
-import pl.shopgen.models.UserRepository;
+import pl.shopgen.repositories.UserRepository;
 import pl.shopgen.validator.RegistrationValidator;
 
 @Service
