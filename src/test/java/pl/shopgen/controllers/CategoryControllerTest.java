@@ -1,5 +1,7 @@
 package pl.shopgen.controllers;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,10 +20,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import pl.shopgen.codes.ApiStatusCode;
+import pl.shopgen.ShopApplication;
 import pl.shopgen.models.Category;
-import pl.shopgen.models.CategoryDTO;
 import pl.shopgen.repositories.CategoryRepository;
+import pl.shopgen.services.CategoryService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,19 +31,19 @@ import java.util.Optional;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
-@WebMvcTest(controllers = Category.class, secure = false)
+@WebMvcTest(controllers = CategoryController.class, secure = false)
 @AutoConfigureRestDocs(outputDir = "build/snippets")
-@ContextConfiguration
+@ContextConfiguration(classes = {CategoryService.class, ShopApplication.class})
 @WebAppConfiguration
 public class CategoryControllerTest {
 
@@ -50,7 +53,7 @@ public class CategoryControllerTest {
     private static final String CATEGORY_ID_NOT_FOUND = "test999failure999id";
 
     @MockBean
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private MockMvc mockMvc;
@@ -85,10 +88,8 @@ public class CategoryControllerTest {
         });
 
         Mockito.when(categoryRepository.findAll())
-                .then(invocation -> {
-                    return new ArrayList<>(Collections
-                            .singletonList(createCategoryDatabaseMock(CATEGORY_ID).orElse(null)));
-                });
+                .then(invocation -> new ArrayList<>(Collections
+                        .singletonList(createCategoryDatabaseMock(CATEGORY_ID).orElse(null))));
 
         Mockito.when(categoryRepository.save(Mockito.any(Category.class)))
                 .then(invocation -> invocation.getArgument(0));
@@ -98,7 +99,7 @@ public class CategoryControllerTest {
         Category category = new Category();
         category.setId(id);
         category.setName(CATEGORY_NAME);
-        category.setSubcategories(Collections.emptyList());
+        category.setSubcategories(new ArrayList<>());
         return Optional.of(category);
     }
 
@@ -109,124 +110,124 @@ public class CategoryControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(CATEGORY_ID))
                 .andExpect(jsonPath("$.name").value(CATEGORY_NAME))
-                .andExpect(jsonPath("$.subcategory").value(Collections.emptyList()))
-                .andExpect(jsonPath("$.status").value(ApiStatusCode.SUCCESS))
-                .andExpect(jsonPath("$.errorMessage").isEmpty())
+                .andExpect(jsonPath("$.subcategories").isArray())
                 .andDo(MockMvcRestDocumentation
                         .document("categories/getCategory/ok", preprocessResponse(prettyPrint()),
-                                PayloadDocumentation.responseFields(CategoryDTO.fieldsDescriptor())));
+                                PayloadDocumentation.responseFields(getResponseFieldDescriptors())));
     }
 
-    @Test
-    public void getCategoryNotFoundTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/categories/" + CATEGORY_ID_NOT_FOUND))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").doesNotExist())
-                .andExpect(jsonPath("$.name").doesNotExist())
-                .andExpect(jsonPath("$.subcategory").value(Collections.emptyList()))
-                .andExpect(jsonPath("$.status").value(ApiStatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.errorMessage").isNotEmpty())
-                .andDo(MockMvcRestDocumentation
-                        .document("categories/getCategory/not_found",
-                                preprocessResponse(prettyPrint()),
-                                PayloadDocumentation.responseFields(CategoryDTO.fieldsDescriptor())));
+    //    @Test
+    //    public void getCategoryNotFoundTest() throws Exception {
+    //        mockMvc.perform(MockMvcRequestBuilders.get("/categories/" + CATEGORY_ID_NOT_FOUND))
+    //                .andDo(print())
+    //                .andExpect(status().isOk())
+    //                .andExpect(jsonPath("$.id").doesNotExist())
+    //                .andExpect(jsonPath("$.name").doesNotExist())
+    //                .andExpect(jsonPath("$.subcategories").value(Collections.emptyList()))
+    //                .andDo(MockMvcRestDocumentation
+    //                        .document("categories/getCategory/not_found",
+    //                                preprocessResponse(prettyPrint()),
+    //                                PayloadDocumentation.responseFields(getResponseFieldDescriptors())));
+    //    }
+
+    private FieldDescriptor[] getResponseFieldDescriptors() {
+        return new FieldDescriptor[]{
+                PayloadDocumentation.fieldWithPath("id").description("Id of the category"),
+                PayloadDocumentation.fieldWithPath("name").description("Name of the category"),
+                PayloadDocumentation.fieldWithPath("subcategories").description("List of subcategories")
+        };
     }
+
+    //    @Test
+    //    public void addCategoryWhenExistsTest() throws Exception {
+    //        String requestContent = "{\"name\": \"" + CATEGORY_NAME + "\"}";
+    //
+    //        mockMvc.perform(post("/categories/").contentType(MediaType.APPLICATION_JSON).content(requestContent))
+    //                .andDo(print()).andExpect(status().isOk())
+    //                .andExpect(jsonPath("$.id").value(CATEGORY_ID))
+    //                .andExpect(jsonPath("$.name").value(CATEGORY_NAME))
+    //                .andExpect(jsonPath("$.subcategories").value(Collections.emptyList()))
+    //                .andDo(MockMvcRestDocumentation.document("categories/addNewCategory/exists",
+    //                        preprocessResponse(prettyPrint()),
+    //                        PayloadDocumentation.requestFields(
+    //                                PayloadDocumentation.fieldWithPath("name").description("Name of the new category")
+    //                        ),
+    //                        PayloadDocumentation.responseFields(getResponseFieldDescriptors())));
+    //    }
 
     @Test
     public void addCategoryOkTest() throws Exception {
-        String requestContent = "{\"name\": \"" + CATEGORY_NAME_NOT_FOUND + "\"}";
+        String requestContent = new JSONObject()
+                .put("name", CATEGORY_NAME_NOT_FOUND)
+                .put("parentCategoryId", CATEGORY_ID)
+                .toString();
 
-
-        mockMvc.perform(post("/categories/").contentType(MediaType.APPLICATION_JSON).content(requestContent))
+        mockMvc.perform(post("/categories").contentType(MediaType.APPLICATION_JSON)
+                .content(requestContent))
                 .andDo(print()).andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(CATEGORY_ID))
+                .andExpect(jsonPath("$.id").isNotEmpty())
                 .andExpect(jsonPath("$.name").value(CATEGORY_NAME_NOT_FOUND))
-                .andExpect(jsonPath("$.subcategory").value(Collections.emptyList()))
-                .andExpect(jsonPath("$.errorMessage").isEmpty())
-                .andExpect(jsonPath("$.status").value(ApiStatusCode.SUCCESS))
-                .andDo(MockMvcRestDocumentation.document("categories/addCategory/ok",
+                .andExpect(jsonPath("$.subcategories").isArray())
+                .andDo(MockMvcRestDocumentation.document("categories/addNewCategory/ok",
                         preprocessResponse(prettyPrint()),
                         PayloadDocumentation.requestFields(
-                                PayloadDocumentation.fieldWithPath("name").description("Name of the new category")
+                                PayloadDocumentation.fieldWithPath("name").description("Name of the new category"),
+                                PayloadDocumentation.fieldWithPath("parentCategoryId")
+                                        .description("Parent category id under which new category will be added")
                         ),
-                        PayloadDocumentation.responseFields(CategoryDTO.fieldsDescriptor())));
+                        PayloadDocumentation.responseFields(getResponseFieldDescriptors())));
 
-    }
-
-    @Test
-    public void addCategoryWhenExistsTest() throws Exception {
-        String requestContent = "{\"name\": \"" + CATEGORY_NAME + "\"}";
-
-        mockMvc.perform(post("/categories/").contentType(MediaType.APPLICATION_JSON).content(requestContent))
-                .andDo(print()).andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(CATEGORY_ID))
-                .andExpect(jsonPath("$.name").value(CATEGORY_NAME))
-                .andExpect(jsonPath("$.subcategory").value(Collections.emptyList()))
-                .andExpect(jsonPath("$.errorMessage").isNotEmpty())
-                .andExpect(jsonPath("$.status").value(ApiStatusCode.OBJECT_EXISTS))
-                .andDo(MockMvcRestDocumentation.document("categories/addCategory/exists",
-                        preprocessResponse(prettyPrint()),
-                        PayloadDocumentation.requestFields(
-                                PayloadDocumentation.fieldWithPath("name").description("Name of the new category")
-                        ),
-                        PayloadDocumentation.responseFields(CategoryDTO.fieldsDescriptor())));
     }
 
     @Test
     public void updateCategoryOkTest() throws Exception {
+        String requestContent = new JSONObject()
+                .put("id", CATEGORY_ID)
+                .put("name", CATEGORY_NAME)
+                .put("subcategories", new JSONArray())
+                .toString();
 
-        String requestContent = "{" +
-                getJsonParameter("id", CATEGORY_ID) + ", " +
-                getJsonParameter("name", CATEGORY_NAME) +
-                "}";
         mockMvc.perform(put("/categories/").contentType(MediaType.APPLICATION_JSON)
                 .content(requestContent))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(CATEGORY_ID))
                 .andExpect(jsonPath("$.name").value(CATEGORY_NAME))
-                .andExpect(jsonPath("$.subcategory").value(Collections.emptyList()))
-                .andExpect(jsonPath("$.errorMessage").isEmpty())
-                .andExpect(jsonPath("$.status").value(ApiStatusCode.SUCCESS))
+                .andExpect(jsonPath("$.subcategories").isArray())
                 .andDo(MockMvcRestDocumentation.document("categories/updateCategory/ok",
                         preprocessResponse(prettyPrint()),
                         PayloadDocumentation.requestFields(
                                 PayloadDocumentation.fieldWithPath("id")
                                         .description("Id of existing category or empty when add"),
                                 PayloadDocumentation.fieldWithPath("name")
-                                        .description("New name of category with requested id")
+                                        .description("New name of category with requested id"),
+                                PayloadDocumentation.fieldWithPath("subcategories[]")
+                                        .description("Subcategories")
                         ),
-                        PayloadDocumentation.responseFields(CategoryDTO.fieldsDescriptor())));
+                        PayloadDocumentation.responseFields(getResponseFieldDescriptors())));
     }
 
-    public String getJsonParameter(String parameter, String value) {
-        return "\"" + parameter + "\": \"" + value + "\"";
-    }
-
-    @Test
-    public void updateCategoryEmptyNameTest() throws Exception {
-        String requestContent = "{" +
-                getJsonParameter("id", CATEGORY_ID) + ", " +
-                getJsonParameter("name", "") +
-                "}";
-        mockMvc.perform(put("/categories/").contentType(MediaType.APPLICATION_JSON)
-                .content(requestContent))
-                .andDo(print()).andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").isEmpty())
-                .andExpect(jsonPath("$.name").isEmpty())
-                .andExpect(jsonPath("$.subcategory").value(Collections.emptyList()))
-                .andExpect(jsonPath("$.errorMessage").isNotEmpty())
-                .andExpect(jsonPath("$.status").value(ApiStatusCode.BAD_ARGUMENT))
-                .andDo(MockMvcRestDocumentation.document("categories/updateCategory/emptyName",
-                        preprocessResponse(prettyPrint()),
-                        PayloadDocumentation.requestFields(
-                                PayloadDocumentation.fieldWithPath("id")
-                                        .description("Id of existing category or empty when add"),
-                                PayloadDocumentation.fieldWithPath("name")
-                                        .description("New name of category with requested id")
-                        ),
-                        PayloadDocumentation.responseFields(CategoryDTO.fieldsDescriptor())));
-    }
+    //    @Test
+    //    public void updateCategoryEmptyNameTest() throws Exception {
+    //        String requestContent = "{" +
+    //                getJsonParameter("id", CATEGORY_ID) + ", " +
+    //                getJsonParameter("name", "") +
+    //                "}";
+    //        mockMvc.perform(put("/categories/").contentType(MediaType.APPLICATION_JSON)
+    //                .content(requestContent))
+    //                .andDo(print()).andExpect(status().isOk())
+    //                .andExpect(jsonPath("$.id").isEmpty())
+    //                .andExpect(jsonPath("$.name").isEmpty())
+    //                .andExpect(jsonPath("$.subcategories").value(Collections.emptyList()))
+    //                .andDo(MockMvcRestDocumentation.document("categories/updateCategory/emptyName",
+    //                        preprocessResponse(prettyPrint()),
+    //                        PayloadDocumentation.requestFields(
+    //                                PayloadDocumentation.fieldWithPath("id")
+    //                                        .description("Id of existing category or empty when add"),
+    //                                PayloadDocumentation.fieldWithPath("name")
+    //                                        .description("New name of category with requested id")
+    //                        ),
+    //                        PayloadDocumentation.responseFields(getResponseFieldDescriptors())));
+    //    }
 
     @Test
     public void deleteCategoryOkTest() throws Exception {
@@ -234,49 +235,41 @@ public class CategoryControllerTest {
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(CATEGORY_ID))
                 .andExpect(jsonPath("$.name").value(CATEGORY_NAME))
-                .andExpect(jsonPath("$.subcategory").value(Collections.emptyList()))
-                .andExpect(jsonPath("$.errorMessage").isEmpty())
-                .andExpect(jsonPath("$.status").value(ApiStatusCode.SUCCESS))
+                .andExpect(jsonPath("$.subcategories").isArray())
                 .andDo(MockMvcRestDocumentation.document("categories/deleteCategory/ok",
                         preprocessResponse(prettyPrint()),
-                        PayloadDocumentation.responseFields(CategoryDTO.fieldsDescriptor())));
+                        PayloadDocumentation.responseFields(getResponseFieldDescriptors())));
     }
 
     @Test
-    public void deleteCategorysOkTest() throws Exception {
+    public void deleteCategoriesOkTest() throws Exception {
         mockMvc.perform(delete("/categories/"))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$[:1].id").value(CATEGORY_ID))
                 .andExpect(jsonPath("$[:1].name").value(CATEGORY_NAME))
-                .andExpect(jsonPath("$[:1].subcategory").value(Collections.emptyList()))
-                .andExpect(jsonPath("$[:1].status").value(ApiStatusCode.SUCCESS))
+                .andExpect(jsonPath("$[:1].subcategories").isArray())
                 .andDo(MockMvcRestDocumentation.document("categories/deleteCategory/ok",
                         preprocessResponse(prettyPrint()),
-                        PayloadDocumentation.responseFields(
-                                PayloadDocumentation.fieldWithPath("[].status").description("Status of the response"),
-                                PayloadDocumentation.fieldWithPath("[].errorMessage").type("String")
-                                        .description("Description of the error."),
-                                PayloadDocumentation.fieldWithPath("[].id").description("Id of the category"),
-                                PayloadDocumentation.fieldWithPath("[].name").description("Name of the category")
-                        )));
+                        PayloadDocumentation.responseFields(getResponseArrayFieldDescriptors())));
+    }
+
+    private FieldDescriptor[] getResponseArrayFieldDescriptors() {
+        return new FieldDescriptor[]{
+                PayloadDocumentation.fieldWithPath("[].id").description("Id of the category"),
+                PayloadDocumentation.fieldWithPath("[].name").description("Name of the category"),
+                PayloadDocumentation.fieldWithPath("[].subcategories").description("List of subcategories")
+        };
     }
 
     @Test
-    public void getCategorysOkTest() throws Exception {
+    public void getCategoriesOkTest() throws Exception {
         mockMvc.perform(get("/categories/"))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$[:1].id").value(CATEGORY_ID))
                 .andExpect(jsonPath("$[:1].name").value(CATEGORY_NAME))
-                .andExpect(jsonPath("$[:1].subcategory").value(Collections.emptyList()))
-                .andExpect(jsonPath("$[:1].status").value(ApiStatusCode.SUCCESS))
+                .andExpect(jsonPath("$[:1].subcategories").isArray())
                 .andDo(MockMvcRestDocumentation.document("categories/getCategory/ok",
                         preprocessResponse(prettyPrint()),
-                        PayloadDocumentation.responseFields(
-                                PayloadDocumentation.fieldWithPath("[].status").description("Status of the response"),
-                                PayloadDocumentation.fieldWithPath("[].errorMessage").type("String")
-                                        .description("Description of the error."),
-                                PayloadDocumentation.fieldWithPath("[].id").description("Id of the category"),
-                                PayloadDocumentation.fieldWithPath("[].name").description("Name of the category")
-                        )));
+                        PayloadDocumentation.responseFields(getResponseArrayFieldDescriptors())));
     }
 }

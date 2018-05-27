@@ -15,10 +15,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import pl.shopgen.codes.RegistrationResultCode;
 import pl.shopgen.factory.UserFactory;
 import pl.shopgen.models.RegistrationCredentialsDTO;
-import pl.shopgen.models.RegistrationStatusDTO;
 import pl.shopgen.models.Role;
-import pl.shopgen.repositories.RoleRepository;
 import pl.shopgen.models.User;
+import pl.shopgen.repositories.RoleRepository;
 import pl.shopgen.repositories.UserRepository;
 
 import java.util.ArrayList;
@@ -96,7 +95,7 @@ public class AuthServiceTest {
         ));
 
 
-        RegistrationStatusDTO expectedStatus = new RegistrationStatusDTO(RegistrationResultCode.WRONG_EMAIL_FORMAT);
+        Integer expectedStatus = RegistrationResultCode.WRONG_EMAIL_FORMAT;
         RegistrationCredentialsDTO registrationCredentialsDTO = getGoodRegistrationCredentialsMock();
 
         for (String email : wrongEmails) {
@@ -108,7 +107,7 @@ public class AuthServiceTest {
     @Test
     public void registrationSuccessTest() {
         RegistrationCredentialsDTO registrationCredentialsDTO = getGoodRegistrationCredentialsMock();
-        RegistrationStatusDTO expectedStatus = new RegistrationStatusDTO(RegistrationResultCode.SUCCESS);
+        Integer expectedStatus = RegistrationResultCode.SUCCESS;
 
         Assert.assertEquals(expectedStatus, authService.register(registrationCredentialsDTO));
     }
@@ -116,7 +115,7 @@ public class AuthServiceTest {
     @Test
     public void registrationWithEmailWhichExistsTest() {
         RegistrationCredentialsDTO registrationCredentialsDTO = getGoodRegistrationCredentialsMock();
-        RegistrationStatusDTO expectedStatus = new RegistrationStatusDTO(RegistrationResultCode.EMAIL_EXISTS);
+        Integer expectedStatus = RegistrationResultCode.EMAIL_EXISTS;
         registrationCredentialsDTO.setEmail(getSavedUserMock().getEmail());
         Assert.assertEquals(expectedStatus, authService.register(registrationCredentialsDTO));
 
@@ -129,7 +128,7 @@ public class AuthServiceTest {
                 "12345678", // expected 1 letter
                 "aaaaaaaa" // expected 1 number
         ));
-        RegistrationStatusDTO expectedStatus = new RegistrationStatusDTO(RegistrationResultCode.WRONG_PASSWORD_FORMAT);
+        Integer expectedStatus = RegistrationResultCode.WRONG_PASSWORD_FORMAT;
         RegistrationCredentialsDTO registrationCredentialsDTO = getGoodRegistrationCredentialsMock();
 
         for (String pass : wrongPasswords) {
@@ -144,7 +143,7 @@ public class AuthServiceTest {
         RegistrationCredentialsDTO registrationCredentialsDTO = getGoodRegistrationCredentialsMock();
         registrationCredentialsDTO.setPassword("different123");
 
-        RegistrationStatusDTO expectedStatus = new RegistrationStatusDTO(RegistrationResultCode.DIFFERENT_PASSWORDS);
+        Integer expectedStatus = RegistrationResultCode.DIFFERENT_PASSWORDS;
         Assert.assertEquals(expectedStatus, authService.register(registrationCredentialsDTO));
     }
 
@@ -153,7 +152,7 @@ public class AuthServiceTest {
         RegistrationCredentialsDTO registrationCredentialsDTO = getGoodRegistrationCredentialsMock();
         registrationCredentialsDTO.setRoleName("2341sdfsf");
 
-        RegistrationStatusDTO expectedStatus = new RegistrationStatusDTO(RegistrationResultCode.WRONG_ROLE);
+        Integer expectedStatus = RegistrationResultCode.WRONG_ROLE;
         Assert.assertEquals(expectedStatus, authService.register(registrationCredentialsDTO));
     }
 }

@@ -9,125 +9,76 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.shopgen.builders.ApiErrorMessageBuilder;
 import pl.shopgen.codes.ApiStatusCode;
 import pl.shopgen.models.Category;
-import pl.shopgen.models.CategoryDTO;
+import pl.shopgen.models.ErrorDTO;
 import pl.shopgen.repositories.CategoryRepository;
+import pl.shopgen.services.ICategoryService;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/categories")
-public class CategoryController {
+public class CategoryController extends AbstractController {
+
     private final CategoryRepository categoryRepository;
 
-    public CategoryController(CategoryRepository categoryRepository) {
+    private final ICategoryService categoryService;
+
+    public CategoryController(CategoryRepository categoryRepository, ICategoryService categoryService) {
         this.categoryRepository = categoryRepository;
+        this.categoryService = categoryService;
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public CategoryDTO addCategory(@RequestBody Map<String, String> categoryNameMap, List<Category> categorySubcategory) {
-        CategoryDTO categoryDTO;
-        String categoryName = categoryNameMap.getOrDefault("name", null);
+    public String addCategory(@RequestBody Map<String, String> requestBody) {
+        String categoryName = requestBody.getOrDefault("name", null);
+        String parentCategoryId = requestBody.getOrDefault("parentCategoryId", null);
         if(categoryName == null) {
-            categoryDTO = new CategoryDTO();
-            categoryDTO.setStatus(ApiStatusCode.BAD_ARGUMENT);
-            categoryDTO
-                    .setErrorMessage(ApiErrorMessageBuilder.getInstance().badParameter("name", "not exists").build());
-            return categoryDTO;
-        } else if(categoryRepository.findByName(categoryName).isPresent()) {
-            categoryDTO = new CategoryDTO(categoryRepository.findByName(categoryName).orElse(null));
-            categoryDTO.setStatus(ApiStatusCode.OBJECT_EXISTS);
-            categoryDTO.setErrorMessage(ApiErrorMessageBuilder.getInstance().badParameter("name", "exists").build());
+            ApiErrorMessageBuilder errorMessageBuilder = ApiErrorMessageBuilder.getInstance();
+            errorMessageBuilder.badParameter("name", "not exists");
+            return mapToJson(new ErrorDTO(ApiStatusCode.BAD_ARGUMENT, errorMessageBuilder.build()));
+        } else if(parentCategoryId != null && categoryService.getCategoryById(parentCategoryId) == null) {
+            return mapToJson(new ErrorDTO(ApiStatusCode.OBJECT_EXISTS,
+                    ApiErrorMessageBuilder.getInstance().notFound("Not found parent category by requested id")
+                            .build()));
         } else {
-            categoryDTO = new CategoryDTO(categoryRepository.insert(new Category(categoryName, categorySubcategory)));
+            Category category = new Category();
+            category.setName(categoryName);
+            return mapToJson(categoryService.addNewCategory(category, parentCategoryId));
         }
-        return categoryDTO;
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    public List<CategoryDTO> deleteCategories() {
-        List<CategoryDTO> categoryDTOs = new ArrayList<>();
-
-        List<Category> categories = categoryRepository.findAll();
-
-        if(categories.isEmpty()) {
-            CategoryDTO categoryDTO = new CategoryDTO();
-            categoryDTO.setStatus(ApiStatusCode.NOT_FOUND);
-        } else {
-            categoryRepository.deleteAll();
-            categories.forEach(category -> {
-                CategoryDTO categoryDTO = new CategoryDTO(category);
-                categoryDTO.setStatus(ApiStatusCode.SUCCESS);
-                categoryDTOs.add(categoryDTO);
-            });
-        }
-        return categoryDTOs;
+    public String deleteCategories() {
+        String jsonCategories = mapToJson(categoryRepository.findAll());
+        categoryRepository.deleteAll();
+        return jsonCategories;
     }
 
     @RequestMapping(value = "/{categoryId}", method = RequestMethod.DELETE)
-    public CategoryDTO deleteCategory(@PathVariable("categoryId") String categoryId) {
-        CategoryDTO categoryDTO;
-
-        Category category = categoryRepository.findById(categoryId).orElse(null);
-        if(category != null) {
-            categoryDTO = new CategoryDTO();
-            categoryDTO.setStatus(ApiStatusCode.NOT_FOUND);
-        } else {
-            categoryRepository.deleteById(categoryId);
-            categoryDTO = new CategoryDTO(category);
-            categoryDTO.setStatus(
-                    ApiStatusCode.SUCCESS
-            );
-        }
-
-        return categoryDTO;
+    public String deleteCategory(@PathVariable("categoryId") String categoryId) {
+        String categoryJson = mapToJson(categoryRepository.findById(categoryId).orElse(null));
+        categoryRepository.deleteById(categoryId);
+        return categoryJson;
     }
 
     @RequestMapping(value = "/{categoryId}", method = RequestMethod.GET)
     @ResponseBody
-    public CategoryDTO getCategory(@PathVariable("categoryId") String categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElse(null);
-        CategoryDTO categoryDTO = new CategoryDTO();
-
-        if(category == null) {
-            categoryDTO.setStatus(ApiStatusCode.NOT_FOUND);
-            categoryDTO.setErrorMessage(ApiErrorMessageBuilder.getInstance()
-                    .notFound("Not found category with id: " + categoryId).build());
-        } else {
-            categoryDTO.setStatus(ApiStatusCode.SUCCESS);
-        }
-        return categoryDTO;
+    public String getCategory(@PathVariable("categoryId") String categoryId) {
+        return mapToJson(categoryRepository.findById(categoryId).orElse(null));
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public CategoryDTO updateCategory(@RequestBody Category category) {
-        CategoryDTO categoryDTO;
-
-        if(category == null) {
-            categoryDTO = new CategoryDTO();
-            categoryDTO.setStatus(ApiStatusCode.BAD_ARGUMENT);
-        } else if(category.getName() == null || category.getName().equals("")) {
-            categoryDTO = new CategoryDTO();
-            categoryDTO.setStatus(ApiStatusCode.BAD_ARGUMENT);
-            categoryDTO.setErrorMessage(ApiErrorMessageBuilder.getInstance()
-                    .badParameter("name", "Cannot create update category by setting empty name").build());
+    public String updateCategory(@RequestBody Category category) {
+        if(category.getName() == null || category.getName().equals("")) {
+            return mapToJson(new ErrorDTO(ApiStatusCode.BAD_ARGUMENT, ApiErrorMessageBuilder.getInstance()
+                    .badParameter("name", "Cannot create update category by setting empty name").build()));
         } else {
-            categoryDTO = new CategoryDTO(categoryRepository.save(category));
-            categoryDTO.setStatus(ApiStatusCode.SUCCESS);
+            return mapToJson(categoryRepository.save(category));
         }
-        return categoryDTO;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<CategoryDTO> getCategories() {
-        List<CategoryDTO> categoryDTOs = new ArrayList<>();
-
-        categoryRepository.findAll().forEach(category -> {
-            CategoryDTO categoryDTO = new CategoryDTO(category);
-            categoryDTO.setStatus(ApiStatusCode.SUCCESS);
-            categoryDTOs.add(categoryDTO);
-        });
-        return categoryDTOs;
+    public String getCategories() {
+        return mapToJson(categoryRepository.findAll());
     }
 }

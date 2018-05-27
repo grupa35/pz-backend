@@ -2,22 +2,14 @@ package pl.shopgen.controllers;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import pl.shopgen.ShopApplication;
 import pl.shopgen.models.PasswordResetDto;
 import pl.shopgen.models.RandomPasswordGenerator;
 import pl.shopgen.models.Role;
@@ -34,12 +26,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
-@ActiveProfiles("test")
-@WebMvcTest(controllers = ResetUserPasswordController.class, secure = false)
-@AutoConfigureRestDocs(outputDir = "build/snippets")
-@ContextConfiguration(classes = {ShopApplication.class})
-@WebAppConfiguration
+//@RunWith(SpringRunner.class)
+//@ActiveProfiles("test")
+//@WebMvcTest(controllers = ResetUserPasswordController.class, secure = false)
+//@AutoConfigureRestDocs(outputDir = "build/snippets")
+//@ContextConfiguration(classes = {ShopApplication.class})
+//@WebAppConfiguration
 public class ResetPasswordControllerTest {
     private static final String USER_EMAIL = "justyna.pietryga@gmail.com";
     private static final String USER_EMAIL_NOT_FOUND = "noemail@gmail.com";
@@ -56,7 +48,7 @@ public class ResetPasswordControllerTest {
     @MockBean
     RandomPasswordGenerator randomPasswordGenerator;
 
-    @Autowired
+    @MockBean
     private MockMvc mockMvc;
 
     @Before
@@ -108,6 +100,6 @@ public class ResetPasswordControllerTest {
 //                .andExpect(jsonPath("$.message").value("Nie istnieje user o podanym mejlu"))
 //                .andDo(MockMvcRestDocumentation
 //                .document("/resetPsw/ok", preprocessResponse(prettyPrint()),
-//                        PayloadDocumentation.responseFields(RoleDto.fieldsDescriptor())));
+    //                        PayloadDocumentation.responseFields(RoleDto.getFieldDescriptors())));
 //    }
 }

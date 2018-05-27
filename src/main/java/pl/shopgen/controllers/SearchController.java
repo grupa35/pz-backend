@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.shopgen.models.Category;
 import pl.shopgen.models.Product;
-import pl.shopgen.repositories.CategoryRepository;
 import pl.shopgen.repositories.ProductRepository;
+import pl.shopgen.services.ICategoryService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -24,18 +24,18 @@ public class SearchController extends AbstractController {
 
     private final ProductRepository productRepository;
 
-    private final CategoryRepository categoryRepository;
+    private final ICategoryService categoryService;
 
-    public SearchController(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public SearchController(ProductRepository productRepository, ICategoryService categoryService) {
         this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
+        this.categoryService = categoryService;
     }
 
 
     @RequestMapping(value = {"", " "}, method = RequestMethod.GET)
     @ResponseBody
     public String search(@RequestParam Map<String, String> allRequestParams) {
-        ProductFiltersBuilder builder = new ProductFiltersBuilder(allRequestParams, categoryRepository.findAll());
+        ProductFiltersBuilder builder = new ProductFiltersBuilder(allRequestParams, categoryService);
         List<Predicate<Product>> productFilters = builder
                 .name()
                 .category()
@@ -49,17 +49,18 @@ public class SearchController extends AbstractController {
                 .collect(Collectors.toList()));
     }
 
+
     private static class ProductFiltersBuilder {
 
         private List<Predicate<Product>> productFilters;
 
         private Map<String, String> allRequestParams;
 
-        private List<Category> categories;
+        private ICategoryService categoryService;
 
-        ProductFiltersBuilder(Map<String, String> allRequestParams, List<Category> categories) {
+        ProductFiltersBuilder(Map<String, String> allRequestParams, ICategoryService categoryService) {
             this.allRequestParams = allRequestParams;
-            this.categories = categories;
+            this.categoryService = categoryService;
             productFilters = new ArrayList<>();
         }
 
@@ -70,7 +71,8 @@ public class SearchController extends AbstractController {
         }
 
         public ProductFiltersBuilder category() {
-            Category requestCategory = getRequestCategoryById(allRequestParams.getOrDefault("categoryId", null));
+            Category requestCategory = categoryService
+                    .getCategoryById(allRequestParams.getOrDefault("categoryId", null));
 
             productFilters.add(product -> {
                 if(allRequestParams.getOrDefault("categoryId", null) == null) {
@@ -93,27 +95,6 @@ public class SearchController extends AbstractController {
             });
 
             return this;
-        }
-
-        private Category getRequestCategoryById(String categoryId) {
-            if(categoryId == null) {
-                return null;
-            }
-
-            Category requestCategory = categories.stream()
-                    .filter(category -> Objects.equals(category.getId(), categoryId))
-                    .findFirst()
-                    .orElse(null);
-
-            if(requestCategory == null) {
-                requestCategory = categories.stream()
-                        .map(category -> category.getSubCategoryById(categoryId))
-                        .filter(Objects::nonNull)
-                        .findFirst()
-                        .orElse(null);
-            }
-
-            return requestCategory;
         }
 
         public ProductFiltersBuilder lowerPrice() {

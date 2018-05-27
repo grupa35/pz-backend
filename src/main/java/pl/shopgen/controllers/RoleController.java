@@ -8,17 +8,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.shopgen.builders.ApiErrorMessageBuilder;
 import pl.shopgen.codes.ApiStatusCode;
+import pl.shopgen.models.ErrorDTO;
 import pl.shopgen.models.Role;
-import pl.shopgen.models.RoleDto;
 import pl.shopgen.repositories.RoleRepository;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/roles")
-public class RoleController {
+public class RoleController extends AbstractController {
 
     private final RoleRepository roleRepository;
 
@@ -27,106 +25,59 @@ public class RoleController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public RoleDto addRole(@RequestBody Map<String, String> roleNameMap) {
-        RoleDto roleDto;
+    public String addRole(@RequestBody Map<String, String> roleNameMap) {
         String roleName = roleNameMap.getOrDefault("name", null);
         if(roleName == null) {
-            roleDto = new RoleDto();
-            roleDto.setStatus(ApiStatusCode.BAD_ARGUMENT);
-            roleDto.setErrorMessage(ApiErrorMessageBuilder.getInstance()
+            ErrorDTO errorDTO = new ErrorDTO();
+            errorDTO.setCode(ApiStatusCode.BAD_ARGUMENT);
+            errorDTO.setMessage(ApiErrorMessageBuilder.getInstance()
                     .badParameter("name", "not exists").build());
-            return roleDto;
+            return mapToJson(errorDTO);
         } else if(roleRepository.findByName(roleName).isPresent()) {
-            roleDto = new RoleDto(roleRepository.findByName(roleName).orElse(null));
-            roleDto.setStatus(ApiStatusCode.OBJECT_EXISTS);
-            roleDto.setErrorMessage(ApiErrorMessageBuilder.getInstance()
+            ErrorDTO errorDTO = new ErrorDTO();
+            errorDTO.setCode(ApiStatusCode.OBJECT_EXISTS);
+            errorDTO.setMessage(ApiErrorMessageBuilder.getInstance()
                     .badParameter("name", "exists")
                     .build());
-        } else {
-            roleDto = new RoleDto(roleRepository.insert(new Role(roleName)));
-            roleDto.setStatus(ApiStatusCode.SUCCESS);
-        }
+            return mapToJson(errorDTO);
 
-        return roleDto;
+        } else {
+            return mapToJson(roleRepository.insert(new Role(roleName)));
+        }
     }
 
     @RequestMapping(value = "/{roleId}", method = RequestMethod.DELETE)
-    public RoleDto deleteRole(@PathVariable("roleId") String RoleId) {
-        RoleDto roleDto;
-
-        Role role = roleRepository.findById(RoleId).orElse(null);
-        if(role == null) {
-            roleDto = new RoleDto();
-            roleDto.setStatus(ApiStatusCode.NOT_FOUND);
-        } else {
-            roleRepository.deleteById(RoleId);
-            roleDto = new RoleDto(role);
-            roleDto.setStatus(ApiStatusCode.SUCCESS);
-        }
-        return roleDto;
+    public String deleteRole(@PathVariable("roleId") String RoleId) {
+        return mapToJson(roleRepository.findById(RoleId).orElse(null));
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    public List<RoleDto> deleteRoles() {
-        List<Role> roles = roleRepository.findAll();
+    public String deleteRoles() {
+        String rolesJson = mapToJson(roleRepository.findAll());
         roleRepository.deleteAll();
-        List<RoleDto> roleDtos = new ArrayList<>();
-        roles.forEach(role -> {
-            RoleDto roleDto = new RoleDto(role);
-            roleDto.setStatus(ApiStatusCode.SUCCESS);
-            roleDtos.add(roleDto);
-        });
-        return roleDtos;
+        return rolesJson;
     }
 
     @RequestMapping(value = "/{roleId}", method = RequestMethod.GET)
     @ResponseBody
-    public RoleDto getRole(@PathVariable("roleId") String roleId) {
+    public String getRole(@PathVariable("roleId") String roleId) {
         Role role = roleRepository.findById(roleId).orElse(null);
-        RoleDto roleDto = new RoleDto(role);
-
-        if(role == null) {
-            roleDto.setStatus(ApiStatusCode.NOT_FOUND);
-            roleDto.setErrorMessage(ApiErrorMessageBuilder.getInstance()
-                    .notFound("Not found role with id: " + roleId)
-                    .build());
-        } else {
-            roleDto.setStatus(ApiStatusCode.SUCCESS);
-        }
-
-        return roleDto;
+        return mapToJson(role);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public RoleDto updateRole(@RequestBody Role role) {
-        RoleDto roleDto;
-
-        if(role == null) {
-            roleDto = new RoleDto();
-            roleDto.setStatus(ApiStatusCode.BAD_ARGUMENT);
-        } else if(role.getName() == null || role.getName().equals("")) {
-            roleDto = new RoleDto();
-            roleDto.setStatus(ApiStatusCode.BAD_ARGUMENT);
-            roleDto.setErrorMessage(ApiErrorMessageBuilder.getInstance()
+    public String updateRole(@RequestBody Role role) {
+        if(role.getName() == null || role.getName().equals("")) {
+            return mapToJson(new ErrorDTO(ApiStatusCode.BAD_ARGUMENT, ApiErrorMessageBuilder.getInstance()
                     .badParameter("name", "Cannot create update role by setting empty name")
-                    .build());
+                    .build()));
         } else {
-            roleDto = new RoleDto(roleRepository.save(role));
-            roleDto.setStatus(ApiStatusCode.SUCCESS);
+            return mapToJson(roleRepository.save(role));
         }
-
-
-        return roleDto;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<RoleDto> getRoles() {
-        List<RoleDto> roleDtos = new ArrayList<>();
-        roleRepository.findAll().forEach(role -> {
-            RoleDto roleDto = new RoleDto(role);
-            roleDto.setStatus(ApiStatusCode.SUCCESS);
-            roleDtos.add(roleDto);
-        });
-        return roleDtos;
+    public String getRoles() {
+        return mapToJson(roleRepository.findAll());
     }
 }

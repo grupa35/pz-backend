@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RequestMapping("/users")
 @RestController
-public class ResetUserPasswordController {
+public class ResetUserPasswordController extends AbstractController {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
@@ -33,15 +33,13 @@ public class ResetUserPasswordController {
     }
 
     @GetMapping("/resetpwd/{email}")
-    public PasswordResetDto resetUserPwd(@PathVariable String email)
-    {
+    public String resetUserPwd(@PathVariable String email) {
 
         Optional<User> userOptional = userRepository.findByEmail(email);
         if(!userOptional.isPresent())
         {
-            return new PasswordResetDto(false, "Nie istnieje user o podanym mejlu");
+            return mapToJson(new PasswordResetDto(false, "Nie istnieje user o podanym mejlu"));
         }
-        /*Generowanie hasła*/
 
         String newPwd = passwordGenerator.generatePassword(8);
 
@@ -51,6 +49,6 @@ public class ResetUserPasswordController {
 
         emailService.sendSimpleMessage(email,"Password reset",newPwd);
 
-        return new PasswordResetDto(true, "Pomyślnie zmieniono hasło");
+        return mapToJson(new PasswordResetDto(true, "Pomyślnie zmieniono hasło"));
     }
 }

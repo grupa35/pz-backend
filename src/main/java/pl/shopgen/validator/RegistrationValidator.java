@@ -4,13 +4,12 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.RegexValidator;
 import pl.shopgen.codes.RegistrationResultCode;
 import pl.shopgen.models.RegistrationCredentialsDTO;
-import pl.shopgen.models.RegistrationStatusDTO;
 import pl.shopgen.repositories.RoleRepository;
 import pl.shopgen.repositories.UserRepository;
 
 public class RegistrationValidator {
 
-    RegistrationStatusDTO registrationStatusDTO;
+    Integer RegistrationStatus;
 
     RoleRepository roleRepository;
 
@@ -29,43 +28,43 @@ public class RegistrationValidator {
     }
 
     public RegistrationValidator addCheckEmailExists() {
-        if(registrationStatusDTO == null && userRepository.findByEmail(credentials.getEmail()).isPresent()) {
-            registrationStatusDTO = new RegistrationStatusDTO(RegistrationResultCode.EMAIL_EXISTS);
+        if(RegistrationStatus == null && userRepository.findByEmail(credentials.getEmail()).isPresent()) {
+            RegistrationStatus = RegistrationResultCode.EMAIL_EXISTS;
         }
         return this;
     }
 
     public RegistrationValidator addCheckEmailFormat() {
-        if(registrationStatusDTO == null && !EmailValidator.getInstance().isValid(credentials.getEmail())) {
-            registrationStatusDTO = new RegistrationStatusDTO(RegistrationResultCode.WRONG_EMAIL_FORMAT);
+        if(RegistrationStatus == null && !EmailValidator.getInstance().isValid(credentials.getEmail())) {
+            RegistrationStatus = RegistrationResultCode.WRONG_EMAIL_FORMAT;
         }
         return this;
     }
 
     public RegistrationValidator addCheckPasswordFormat() {
         RegexValidator passwordValidator = new RegexValidator(RegexPattern.PASSWORD);
-        if(registrationStatusDTO == null && !passwordValidator.isValid(credentials.getPassword())) {
-            registrationStatusDTO = new RegistrationStatusDTO(RegistrationResultCode.WRONG_PASSWORD_FORMAT);
+        if(RegistrationStatus == null && !passwordValidator.isValid(credentials.getPassword())) {
+            RegistrationStatus = RegistrationResultCode.WRONG_PASSWORD_FORMAT;
         }
         return this;
     }
 
     public RegistrationValidator addCheckPasswordsEqual() {
-        if(registrationStatusDTO == null && !credentials.getPassword().equals(credentials.getRePassword())) {
-            registrationStatusDTO = new RegistrationStatusDTO(RegistrationResultCode.DIFFERENT_PASSWORDS);
+        if(RegistrationStatus == null && !credentials.getPassword().equals(credentials.getRePassword())) {
+            RegistrationStatus = RegistrationResultCode.DIFFERENT_PASSWORDS;
         }
         return this;
     }
 
     public RegistrationValidator addCheckRole() {
-        if(registrationStatusDTO == null && !roleRepository.findByName(credentials.getRoleName()).isPresent()) {
-            registrationStatusDTO = new RegistrationStatusDTO(RegistrationResultCode.WRONG_ROLE);
+        if(RegistrationStatus == null && !roleRepository.findByName(credentials.getRoleName()).isPresent()) {
+            RegistrationStatus = RegistrationResultCode.WRONG_ROLE;
         }
 
         return this;
     }
 
-    public RegistrationStatusDTO validate() {
-        return registrationStatusDTO;
+    public Integer validate() {
+        return RegistrationStatus;
     }
 }

@@ -6,10 +6,9 @@ import org.springframework.stereotype.Service;
 import pl.shopgen.codes.RegistrationResultCode;
 import pl.shopgen.factory.UserFactory;
 import pl.shopgen.models.RegistrationCredentialsDTO;
-import pl.shopgen.models.RegistrationStatusDTO;
 import pl.shopgen.models.Role;
-import pl.shopgen.repositories.RoleRepository;
 import pl.shopgen.models.User;
+import pl.shopgen.repositories.RoleRepository;
 import pl.shopgen.repositories.UserRepository;
 import pl.shopgen.validator.RegistrationValidator;
 
@@ -32,9 +31,9 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public RegistrationStatusDTO register(RegistrationCredentialsDTO credentials) {
+    public Integer register(RegistrationCredentialsDTO credentials) {
 
-        RegistrationStatusDTO registrationStatusDTO = RegistrationValidator
+        Integer registrationStatus = RegistrationValidator
                 .getInstance(credentials, roleRepository, userRepository)
                 .addCheckEmailFormat()
                 .addCheckEmailExists()
@@ -43,19 +42,19 @@ public class AuthService implements IAuthService {
                 .addCheckRole()
                 .validate();
 
-        if(registrationStatusDTO == null) {
+        if(registrationStatus == null) {
             credentials.setPassword(passwordEncoder.encode(credentials.getPassword()));
             User registeredUser = UserFactory
                     .createRegisteredUser(credentials, getRoleByName(credentials.getRoleName()));
             User savedUser = userRepository.save(registeredUser);
             if(savedUser != null) {
-                registrationStatusDTO = new RegistrationStatusDTO(RegistrationResultCode.SUCCESS);
+                registrationStatus = RegistrationResultCode.SUCCESS;
             } else {
-                registrationStatusDTO = new RegistrationStatusDTO(RegistrationResultCode.SAVE_ERROR);
+                registrationStatus = RegistrationResultCode.SAVE_ERROR;
             }
         }
 
-        return registrationStatusDTO;
+        return registrationStatus;
     }
 
     private Role getRoleByName(String roleName) {
