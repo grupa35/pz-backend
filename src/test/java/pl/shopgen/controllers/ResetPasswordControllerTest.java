@@ -17,7 +17,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import pl.shopgen.models.*;
+import pl.shopgen.ShopApplication;
+import pl.shopgen.models.PasswordResetDto;
+import pl.shopgen.models.RandomPasswordGenerator;
+import pl.shopgen.models.Role;
+import pl.shopgen.models.User;
 import pl.shopgen.repositories.UserRepository;
 import pl.shopgen.services.EmailService;
 import pl.shopgen.services.UserService;
@@ -34,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest(controllers = ResetUserPasswordController.class, secure = false)
 @AutoConfigureRestDocs(outputDir = "build/snippets")
-@ContextConfiguration
+@ContextConfiguration(classes = {ShopApplication.class})
 @WebAppConfiguration
 public class ResetPasswordControllerTest {
     private static final String USER_EMAIL = "justyna.pietryga@gmail.com";
@@ -57,6 +61,8 @@ public class ResetPasswordControllerTest {
 
     @Before
     public void setUp() {
+        Mockito.doNothing().when(emailService)
+                .sendSimpleMessage(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
         Mockito.when(userRepository.findByEmail(Mockito.anyString()))
                 .then(invocation -> {
                     if(invocation.getArgument(0).equals(USER_EMAIL_NOT_FOUND)) {
@@ -87,6 +93,7 @@ public class ResetPasswordControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Pomyślnie zmieniono hasło"))
+
                 .andDo(MockMvcRestDocumentation
                         .document("/resetPsw/ok", preprocessResponse(prettyPrint()),
                                 PayloadDocumentation.responseFields(PasswordResetDto.fieldsDescriptor())));

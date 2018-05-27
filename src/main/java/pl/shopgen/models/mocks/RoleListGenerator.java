@@ -1,4 +1,6 @@
-package pl.shopgen.models;
+package pl.shopgen.models.mocks;
+
+import pl.shopgen.models.Role;
 
 import java.util.ArrayList;
 import java.util.Arrays;

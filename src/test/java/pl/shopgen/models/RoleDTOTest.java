@@ -4,13 +4,12 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.junit.Test;
 
-public class SaleTest {
+public class RoleDTOTest {
 
     @Test
     public void equalsContractTest() {
-        EqualsVerifier.forClass(Role.class)
+        EqualsVerifier.forClass(RoleDto.class)
                 .suppress(Warning.NONFINAL_FIELDS)
                 .verify();
     }
-
 }
