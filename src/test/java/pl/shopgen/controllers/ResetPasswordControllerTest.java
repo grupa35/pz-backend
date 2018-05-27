@@ -10,16 +10,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.payload.PayloadDocumentation;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import pl.shopgen.models.PasswordResetDto;
-import pl.shopgen.models.Role;
-import pl.shopgen.models.User;
+import pl.shopgen.models.*;
 import pl.shopgen.repositories.UserRepository;
+import pl.shopgen.services.EmailService;
+import pl.shopgen.services.UserService;
 
 import java.util.Optional;
 
@@ -36,12 +37,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration
 @WebAppConfiguration
 public class ResetPasswordControllerTest {
-    private static final String USER_EMAIL = "send.email@gmail.com";
+    private static final String USER_EMAIL = "justyna.pietryga@gmail.com";
     private static final String USER_EMAIL_NOT_FOUND = "noemail@gmail.com";
     private static final String USER_ID = "5b032c9efea5880b90fd789f";
 
     @MockBean
     UserRepository userRepository;
+    @MockBean
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+    @MockBean
+    UserService userService;
+    @MockBean
+    EmailService emailService;
+    @MockBean
+    RandomPasswordGenerator randomPasswordGenerator;
 
     @Autowired
     private MockMvc mockMvc;
