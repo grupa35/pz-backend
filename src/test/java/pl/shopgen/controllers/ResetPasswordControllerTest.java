@@ -18,6 +18,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.shopgen.ShopApplication;
+import pl.shopgen.configuration.JavaMailSenderConfiguration;
 import pl.shopgen.models.PasswordResetDto;
 import pl.shopgen.models.RandomPasswordGenerator;
 import pl.shopgen.models.Role;
@@ -38,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest(controllers = ResetUserPasswordController.class, secure = false)
 @AutoConfigureRestDocs(outputDir = "build/snippets")
-@ContextConfiguration(classes = ShopApplication.class)
+@ContextConfiguration(classes = {ShopApplication.class, JavaMailSenderConfiguration.class})
 @WebAppConfiguration
 public class ResetPasswordControllerTest {
     private static final String USER_EMAIL = "justyna.pietryga@gmail.com";
@@ -55,6 +56,7 @@ public class ResetPasswordControllerTest {
     EmailService emailService;
     @MockBean
     RandomPasswordGenerator randomPasswordGenerator;
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -91,6 +93,7 @@ public class ResetPasswordControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Pomyślnie zmieniono hasło"))
+
                 .andDo(MockMvcRestDocumentation
                         .document("/resetPsw/ok", preprocessResponse(prettyPrint()),
                                 PayloadDocumentation.responseFields(PasswordResetDto.fieldsDescriptor())));
