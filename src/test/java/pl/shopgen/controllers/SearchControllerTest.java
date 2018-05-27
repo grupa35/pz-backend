@@ -120,7 +120,7 @@ public class SearchControllerTest {
                 .andExpect(jsonPath("$[:1].description.name").value(PRODUCT_DESCRIPTION))
 
                 .andDo(MockMvcRestDocumentation
-                        .document("/search/ok", preprocessResponse(prettyPrint()),
+                        .document("search/ok", preprocessResponse(prettyPrint()),
                                 requestParameters(
                                         parameterWithName("name").description("Product name to search"),
                                         parameterWithName("categoryId").description("Product's categoryId to search"),
