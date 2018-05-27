@@ -10,11 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.shopgen.models.Sale;
 import pl.shopgen.repositories.SaleRepository;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/sales")
-public class SaleController {
+public class SaleController extends AbstractController {
 
     private final SaleRepository saleRepository;
 
@@ -24,41 +22,41 @@ public class SaleController {
 
 
     @RequestMapping(method = RequestMethod.POST)
-    public Sale addSale(@RequestBody Sale sale) {
-        return saleRepository.insert(sale);
+    public String addSale(@RequestBody Sale sale) {
+        return mapToJson(saleRepository.insert(sale));
     }
 
     @RequestMapping(value = "/{saleId}", method = RequestMethod.DELETE)
-    public Sale deleteSale(@PathVariable("saleId") String saleId) {
-        Sale sale = saleRepository.findById(saleId).orElse(null);
+    public String deleteSale(@PathVariable("saleId") String saleId) {
+        String jsonSale = mapToJson(saleRepository.findById(saleId).orElse(null));
 
-        if(sale != null) {
+        if(jsonSale.isEmpty()) {
             saleRepository.deleteById(saleId);
         }
 
-        return sale;
+        return jsonSale;
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    public List<Sale> deleteSales() {
-        List<Sale> sales = saleRepository.findAll();
+    public String deleteSales() {
+        String jsonSales = mapToJson(saleRepository.findAll());
         saleRepository.deleteAll();
-        return sales;
+        return jsonSales;
     }
 
     @RequestMapping(value = "/{saleId}", method = RequestMethod.GET)
     @ResponseBody
-    public Sale getSale(@PathVariable("saleId") String saleId) {
-        return saleRepository.findById(saleId).orElse(null);
+    public String getSale(@PathVariable("saleId") String saleId) {
+        return mapToJson(saleRepository.findById(saleId).orElse(null));
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public Sale updateSale(@RequestBody Sale sale) {
-        return saleRepository.save(sale);
+    public String updateSale(@RequestBody Sale sale) {
+        return mapToJson(saleRepository.save(sale));
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Sale> getSales() {
-        return saleRepository.findAll();
+    public String getSales() {
+        return mapToJson(saleRepository.findAll());
     }
 }
