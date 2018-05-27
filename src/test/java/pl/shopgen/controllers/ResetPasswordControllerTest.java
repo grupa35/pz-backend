@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,14 +19,12 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.shopgen.ShopApplication;
-import pl.shopgen.configuration.JavaMailSenderConfiguration;
 import pl.shopgen.models.PasswordResetDto;
 import pl.shopgen.models.RandomPasswordGenerator;
 import pl.shopgen.models.Role;
 import pl.shopgen.models.User;
 import pl.shopgen.repositories.UserRepository;
 import pl.shopgen.services.EmailService;
-import pl.shopgen.services.EmailServiceImpl;
 import pl.shopgen.services.UserService;
 
 import java.util.Optional;
@@ -40,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest(controllers = ResetUserPasswordController.class, secure = false)
 @AutoConfigureRestDocs(outputDir = "build/snippets")
-@ContextConfiguration(classes = {ShopApplication.class, JavaMailSenderConfiguration.class})
+@ContextConfiguration(classes = {ShopApplication.class})
 @WebAppConfiguration
 public class ResetPasswordControllerTest {
     private static final String USER_EMAIL = "justyna.pietryga@gmail.com";
@@ -53,20 +52,20 @@ public class ResetPasswordControllerTest {
     BCryptPasswordEncoder bCryptPasswordEncoder;
     @MockBean
     UserService userService;
-    @Autowired
+    @MockBean
     EmailService emailService;
     @MockBean
     RandomPasswordGenerator randomPasswordGenerator;
 
     @MockBean
-    EmailServiceImpl emailServiceImpl;
-
+    JavaMailSenderImpl javaMailSender;
 
     @Autowired
     private MockMvc mockMvc;
 
     @Before
     public void setUp() {
+        javaMailSender.setPort(2525);
         Mockito.when(userRepository.findByEmail(Mockito.anyString()))
                 .then(invocation -> {
                     if(invocation.getArgument(0).equals(USER_EMAIL_NOT_FOUND)) {
