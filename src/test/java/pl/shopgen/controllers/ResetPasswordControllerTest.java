@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -58,6 +59,7 @@ public class ResetPasswordControllerTest {
     RandomPasswordGenerator randomPasswordGenerator;
 
     @MockBean
+    @Qualifier("ShopGenSender")
     JavaMailSenderImpl javaMailSender;
 
     @Autowired
@@ -65,7 +67,7 @@ public class ResetPasswordControllerTest {
 
     @Before
     public void setUp() {
-        javaMailSender.setPort(2525);
+        Mockito.when(javaMailSender.getPort()).then(invocation -> 2525);
         Mockito.when(userRepository.findByEmail(Mockito.anyString()))
                 .then(invocation -> {
                     if(invocation.getArgument(0).equals(USER_EMAIL_NOT_FOUND)) {
