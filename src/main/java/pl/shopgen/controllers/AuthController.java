@@ -5,12 +5,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import pl.shopgen.models.RegistrationCredentialsDTO;
-import pl.shopgen.models.RegistrationStatusDTO;
 import pl.shopgen.services.AuthService;
 
 @RestController
-
-public class AuthController {
+public class AuthController extends AbstractController {
 
     private AuthService authService;
 
@@ -19,7 +17,7 @@ public class AuthController {
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public RegistrationStatusDTO register(@RequestBody RegistrationCredentialsDTO registrationCredentialsDTO) {
-        return authService.register(registrationCredentialsDTO);
+    public String register(@RequestBody RegistrationCredentialsDTO registrationCredentialsDTO) {
+        return mapToJson(authService.register(registrationCredentialsDTO));
     }
 }
