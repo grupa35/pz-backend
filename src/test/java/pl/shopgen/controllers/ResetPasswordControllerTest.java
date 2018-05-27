@@ -25,6 +25,7 @@ import pl.shopgen.models.Role;
 import pl.shopgen.models.User;
 import pl.shopgen.repositories.UserRepository;
 import pl.shopgen.services.EmailService;
+import pl.shopgen.services.EmailServiceImpl;
 import pl.shopgen.services.UserService;
 
 import java.util.Optional;
@@ -52,10 +53,13 @@ public class ResetPasswordControllerTest {
     BCryptPasswordEncoder bCryptPasswordEncoder;
     @MockBean
     UserService userService;
-    @MockBean
+    @Autowired
     EmailService emailService;
     @MockBean
     RandomPasswordGenerator randomPasswordGenerator;
+
+    @MockBean
+    EmailServiceImpl emailServiceImpl;
 
 
     @Autowired
