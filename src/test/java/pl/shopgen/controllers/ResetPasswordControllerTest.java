@@ -1,6 +1,5 @@
 package pl.shopgen.controllers;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,13 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.shopgen.ShopApplication;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import pl.shopgen.models.PasswordResetDto;
 import pl.shopgen.models.RandomPasswordGenerator;
 import pl.shopgen.models.Role;
 import pl.shopgen.models.User;
@@ -25,11 +27,17 @@ import pl.shopgen.services.UserService;
 
 import java.util.Optional;
 
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
 @WebMvcTest(controllers = ResetUserPasswordController.class, secure = false)
 @AutoConfigureRestDocs(outputDir = "build/snippets")
-@ContextConfiguration(classes = {ShopApplication.class})
+@ContextConfiguration
 @WebAppConfiguration
 public class ResetPasswordControllerTest {
     private static final String USER_EMAIL = "justyna.pietryga@gmail.com";
@@ -52,8 +60,6 @@ public class ResetPasswordControllerTest {
 
     @Before
     public void setUp() {
-        Mockito.doNothing().when(emailService)
-                .sendSimpleMessage(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
         Mockito.when(userRepository.findByEmail(Mockito.anyString()))
                 .then(invocation -> {
                     if(invocation.getArgument(0).equals(USER_EMAIL_NOT_FOUND)) {
@@ -79,16 +85,15 @@ public class ResetPasswordControllerTest {
 
     @Test
     public void passwordResetOkTest() throws Exception {
-        Assert.assertTrue(true);
-        //        mockMvc.perform(MockMvcRequestBuilders.get("/users/resetpwd/" + USER_EMAIL))
-        //                .andDo(print())
-        //                .andExpect(status().isOk())
-        //                .andExpect(jsonPath("$.success").value(true))
-        //                .andExpect(jsonPath("$.message").value("Pomyślnie zmieniono hasło"))
-        //
-        //                .andDo(MockMvcRestDocumentation
-        //                        .document("/resetPsw/ok", preprocessResponse(prettyPrint()),
-        //                                PayloadDocumentation.responseFields(PasswordResetDto.fieldsDescriptor())));
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/resetpwd/" + USER_EMAIL))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.message").value("Pomyślnie zmieniono hasło"))
+
+                .andDo(MockMvcRestDocumentation
+                        .document("resetPsw/ok", preprocessResponse(prettyPrint()),
+                                PayloadDocumentation.responseFields(PasswordResetDto.fieldsDescriptor())));
     }
 
 //    @Test
