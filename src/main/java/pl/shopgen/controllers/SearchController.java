@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.shopgen.models.Category;
-import pl.shopgen.repositories.CategoryRepository;
 import pl.shopgen.models.Product;
+import pl.shopgen.repositories.CategoryRepository;
 import pl.shopgen.repositories.ProductRepository;
 
 import java.math.BigDecimal;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/search")
-public class SearchController {
+public class SearchController extends AbstractController {
 
     private final ProductRepository productRepository;
 
@@ -34,7 +34,7 @@ public class SearchController {
 
     @RequestMapping(value = {"", " "}, method = RequestMethod.GET)
     @ResponseBody
-    public List<Product> search(@RequestParam Map<String, String> allRequestParams) {
+    public String search(@RequestParam Map<String, String> allRequestParams) {
         ProductFiltersBuilder builder = new ProductFiltersBuilder(allRequestParams, categoryRepository.findAll());
         List<Predicate<Product>> productFilters = builder
                 .name()
@@ -43,10 +43,10 @@ public class SearchController {
                 .higherPrice()
                 .build();
 
-        return productRepository.findAll().stream()
+        return mapToJson(productRepository.findAll().stream()
                 .filter(product -> productFilters.stream()
                         .allMatch(productPredicate -> productPredicate.test(product)))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     private static class ProductFiltersBuilder {
