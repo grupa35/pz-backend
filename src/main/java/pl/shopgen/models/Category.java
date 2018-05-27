@@ -15,6 +15,10 @@ public class Category implements SimpleObject {
 
     private List<Category> subcategories = new ArrayList<>();
 
+    public Category() {
+
+    }
+
     public Category(String name, List<Category> subcategories) {
         this.name = name;
         this.subcategories.addAll(subcategories);
