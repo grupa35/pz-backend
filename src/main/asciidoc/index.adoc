@@ -76,3 +76,16 @@ include::{snippets}/roles/getRoles/ok/response-fields.adoc[]
 
 
 ==== Bad request: not found
+
+
+== RESET USER PASSWORD
+=== Reset Password
+==== Good request
+.http request
+include::{snippets}/resetPsw/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/resetPsw/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/resetPsw/ok/response-fields.adoc[]
