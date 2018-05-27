@@ -5,11 +5,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -58,16 +56,13 @@ public class ResetPasswordControllerTest {
     @MockBean
     RandomPasswordGenerator randomPasswordGenerator;
 
-    @MockBean
-    @Qualifier("ShopGenSender")
-    JavaMailSenderImpl javaMailSender;
-
     @Autowired
     private MockMvc mockMvc;
 
     @Before
     public void setUp() {
-        Mockito.when(javaMailSender.getPort()).then(invocation -> 2525);
+        Mockito.doNothing().when(emailService)
+                .sendSimpleMessage(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
         Mockito.when(userRepository.findByEmail(Mockito.anyString()))
                 .then(invocation -> {
                     if(invocation.getArgument(0).equals(USER_EMAIL_NOT_FOUND)) {
