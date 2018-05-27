@@ -1,5 +1,6 @@
 package pl.shopgen.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ public class User implements SimpleObject, UserDetails {
     private String id;
     private String name;
     private String surname;
+    @JsonIgnore
     private String password;
     private String email;
     private Role role;

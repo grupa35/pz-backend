@@ -1,62 +1,49 @@
 package pl.shopgen.controllers;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-import pl.shopgen.models.User;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import pl.shopgen.repositories.UserRepository;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-public class UserController {
+public class UserController extends AbstractController {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserController(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    @RequestMapping(method = RequestMethod.POST)
-    User addUser(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.insert(user);
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    List<User> deleteUsers() {
-        List<User> users = userRepository.findAll();
+    public String deleteUsers() {
+        String userJson = mapToJson(userRepository.findAll());
         userRepository.deleteAll();
-        return users;
+        return userJson;
     }
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
-    User deleteUser(@PathVariable("userId") String userId) {
+    public String deleteUser(@PathVariable("userId") String userId) {
 
-        User user = userRepository.findById(userId).orElse(null);
+        String userJson = mapToJson(userRepository.findById(userId).orElse(null));
 
-        if(user != null) {
+        if(userJson.isEmpty()) {
            userRepository.deleteById(userId);
         }
 
-        return user;
-    }
-
-    @RequestMapping(method = RequestMethod.GET)
-    List<User> getUsers() {
-        return userRepository.findAll();
+        return userJson;
     }
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
     @ResponseBody
-    User getUser(@PathVariable("userId") String userId) {
-        return userRepository.findById(userId).orElse(null);
+    public String getUser(@PathVariable("userId") String userId) {
+        return mapToJson(userRepository.findById(userId).orElse(null));
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    User updateUser(@RequestBody User user) {
-        return userRepository.save(user);
+    @RequestMapping(method = RequestMethod.GET)
+    public String getUsers() {
+        return mapToJson(userRepository.findAll());
     }
 }
