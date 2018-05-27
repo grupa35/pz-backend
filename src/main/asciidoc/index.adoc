@@ -89,3 +89,18 @@ include::{snippets}/resetPsw/ok/http-response.adoc[]
 
 .response fields
 include::{snippets}/resetPsw/ok/response-fields.adoc[]
+
+== SEARCH
+=== Search products
+==== Good request
+.http request
+include::{snippets}/search/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/search/ok/http-response.adoc[]
+
+.request parameters
+include::{snippets}/search/ok/request-parameters.adoc[]
+
+.response fields
+include::{snippets}/search/ok/response-fields.adoc[]
