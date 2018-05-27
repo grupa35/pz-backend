@@ -16,11 +16,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import pl.shopgen.ShopApplication;
 import pl.shopgen.models.Category;
 import pl.shopgen.models.Description;
 import pl.shopgen.models.Product;
 import pl.shopgen.repositories.CategoryRepository;
 import pl.shopgen.repositories.ProductRepository;
+import pl.shopgen.services.CategoryService;
+import pl.shopgen.services.ICategoryService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -40,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest(controllers = SearchController.class, secure = false)
 @AutoConfigureRestDocs(outputDir = "build/snippets")
-@ContextConfiguration
+@ContextConfiguration(classes = {ShopApplication.class, CategoryService.class})
 @WebAppConfiguration
 public class SearchControllerTest {
 
@@ -58,9 +61,25 @@ public class SearchControllerTest {
     @MockBean
     CategoryRepository categoryRepository;
 
+    @Autowired
+    private ICategoryService categoryService;
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Before
+    public void setUp() {
+
+        Mockito.when(productRepository.findAll())
+                .then(
+                        invocation -> generateProducts()
+                );
+        Mockito.when(categoryRepository.findAll())
+                .then(
+                        invocation -> generateCategories()
+                );
+
+    }
 
     private List<Product> generateProducts() {
         List<Product> products = new ArrayList<>();
@@ -77,20 +96,6 @@ public class SearchControllerTest {
         p1.setCategory(c1);
         products.add(p1);
         return products;
-    }
-
-
-    @Before
-    public void setUp() {
-        Mockito.when(productRepository.findAll())
-                .then(
-                        invocation ->  generateProducts()
-                );
-        Mockito.when(categoryRepository.findAll())
-                .then(
-                        invocation -> generateCategories()
-                );
-
     }
 
     private List<Category> generateCategories() {
