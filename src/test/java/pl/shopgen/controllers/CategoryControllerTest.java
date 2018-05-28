@@ -168,7 +168,7 @@ public class CategoryControllerTest {
                 .andExpect(jsonPath("$.id").isNotEmpty())
                 .andExpect(jsonPath("$.name").value(CATEGORY_NAME_NOT_FOUND))
                 .andExpect(jsonPath("$.subcategories").isArray())
-                .andDo(MockMvcRestDocumentation.document("categories/addNew/ok",
+                .andDo(MockMvcRestDocumentation.document("categories/addNewCategory/ok",
                         preprocessResponse(prettyPrint()),
                         PayloadDocumentation.requestFields(
                                 PayloadDocumentation.fieldWithPath("name").description("Name of the new category"),
@@ -193,7 +193,7 @@ public class CategoryControllerTest {
                 .andExpect(jsonPath("$.id").value(CATEGORY_ID))
                 .andExpect(jsonPath("$.name").value(CATEGORY_NAME))
                 .andExpect(jsonPath("$.subcategories").isArray())
-                .andDo(MockMvcRestDocumentation.document("categories/update/ok",
+                .andDo(MockMvcRestDocumentation.document("categories/updateCategory/ok",
                         preprocessResponse(prettyPrint()),
                         PayloadDocumentation.requestFields(
                                 PayloadDocumentation.fieldWithPath("id")
