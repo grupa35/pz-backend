@@ -107,7 +107,7 @@ include::{snippets}/search/ok/response-fields.adoc[]
 
 == CATEGORY
 === Get category
-==== Goood request
+==== Good request
 .http request
 include::{snippets}/categories/getCategory/ok/http-request.adoc[]
 
@@ -118,7 +118,7 @@ include::{snippets}/categories/getCategory/ok/http-response.adoc[]
 include::{snippets}/categories/getCategory/ok/response-fields.adoc[]
 
 === Get categories
-==== Goood request
+==== Good request
 
 .http request
 include::{snippets}/categories/getCategories/ok/http-request.adoc[]
@@ -130,7 +130,7 @@ include::{snippets}/categories/getCategories/ok/http-response.adoc[]
 include::{snippets}/categories/getCategories/ok/response-fields.adoc[]
 
 === Add category
-==== Goood request
+==== Good request
 
 .http request
 include::{snippets}/categories/addNewCategory/ok/http-request.adoc[]
@@ -145,7 +145,7 @@ include::{snippets}/categories/addNewCategory/ok/request-fields.adoc[]
 include::{snippets}/categories/addNewCategory/ok/response-fields.adoc[]
 
 === Update category
-==== Goood request
+==== Good request
 
 .http request
 include::{snippets}/categories/updateCategory/ok/http-request.adoc[]
@@ -160,7 +160,7 @@ include::{snippets}/categories/updateCategory/ok/request-fields.adoc[]
 include::{snippets}/categories/updateCategory/ok/response-fields.adoc[]
 
 === Delete category
-==== Goood request
+==== Good request
 
 .http request
 include::{snippets}/categories/deleteCategory/ok/http-request.adoc[]
@@ -172,7 +172,7 @@ include::{snippets}/categories/deleteCategory/ok/http-response.adoc[]
 include::{snippets}/categories/deleteCategory/ok/response-fields.adoc[]
 
 === Delete categories
-==== Goood request
+==== Good request
 
 .http request
 include::{snippets}/categories/deleteCategories/ok/http-request.adoc[]
@@ -183,3 +183,52 @@ include::{snippets}/categories/deleteCategories/ok/http-response.adoc[]
 .response fields
 include::{snippets}/categories/deleteCategories/ok/response-fields.adoc[]
 
+
+== USER
+=== Get users
+==== Good request
+
+.http request
+include::{snippets}/users/getUsers/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/users/getUsers/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/users/getUsers/ok/response-fields.adoc[]
+
+=== Get user
+==== Good request
+
+.http request
+include::{snippets}/users/getUser/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/users/getUser/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/users/getUser/ok/response-fields.adoc[]
+
+=== Delete user
+==== Good request
+
+.http request
+include::{snippets}/users/deleteUser/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/users/deleteUser/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/users/deleteUser/ok/response-fields.adoc[]
+
+=== Delete users
+==== Good request
+
+.http request
+include::{snippets}/users/deleteUsers/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/users/deleteUsers/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/users/deleteUsers/ok/response-fields.adoc[]
