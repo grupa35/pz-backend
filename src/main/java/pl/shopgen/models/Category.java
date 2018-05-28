@@ -46,7 +46,7 @@ public class Category implements SimpleObject {
     }
 
     @Override
-    final public int hashCode() {
+    public final int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (subcategories != null ? subcategories.hashCode() : 0);
@@ -54,7 +54,7 @@ public class Category implements SimpleObject {
     }
 
     @Override
-    final public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if(this == o) {
             return true;
         }
@@ -123,6 +123,7 @@ public class Category implements SimpleObject {
         } else {
             return subcategories.stream()
                     .map(subcategory -> subcategory.getParentOfById(categoryId))
+                    .filter(Objects::nonNull)
                     .findFirst()
                     .orElse(null);
         }
