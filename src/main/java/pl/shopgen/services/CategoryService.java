@@ -18,7 +18,7 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public Category getCategoryById(String categoryId) {
+    public Category getById(String categoryId) {
         if(categoryId == null) {
             return null;
         }
@@ -42,7 +42,7 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public Category addNewCategory(Category category, String parentCategoryId) {
+    public Category addNew(Category category, String parentCategoryId) {
         if(parentCategoryId == null) {
             return addRootCategory(category);
         }
@@ -50,11 +50,49 @@ public class CategoryService implements ICategoryService {
         return addChildCategory(category, parentCategoryId);
     }
 
+    @Override
+    public Category update(Category category) {
+        if(category == null) {
+            return null;
+        }
+
+        Category root = getRoot(category.getId());
+        if(root != null) {
+            if(root.getId().equals(category.getId())) {
+                return categoryRepository.save(category);
+            } else {
+                root.getSubCategoryById(category.getId()).update(category);
+                return categoryRepository.save(root);
+            }
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Category deleteById(String categoryId) {
+        Category root = getRoot(categoryId);
+
+
+        if(root != null) {
+            if(root.getId().equals(categoryId)) {
+                categoryRepository.delete(root);
+                return root;
+            }
+            Category parent = root.getParentOfById(categoryId);
+
+            if(parent != null) {
+                Category categoryToDelete = parent.getSubCategoryById(categoryId);
+                parent.getSubcategories().remove(categoryToDelete);
+                categoryRepository.save(root);
+                return categoryToDelete;
+            }
+        }
+        return null;
+    }
+
     private Category addChildCategory(Category category, String parentCategoryId) {
-        Category rootCategory = categoryRepository.findAll().stream()
-                .filter(c -> c.getSubCategoryById(parentCategoryId) != null || c.getId().equals(parentCategoryId))
-                .findFirst()
-                .orElse(null);
+        Category rootCategory = getRoot(parentCategoryId);
         if(rootCategory == null) {
             return null;
         } else {
@@ -67,6 +105,13 @@ public class CategoryService implements ICategoryService {
             categoryRepository.save(rootCategory);
             return category;
         }
+    }
+
+    private Category getRoot(String categoryId) {
+        return categoryRepository.findAll().stream()
+                .filter(c -> c.getSubCategoryById(categoryId) != null || c.getId().equals(categoryId))
+                .findFirst()
+                .orElse(null);
     }
 
     private Category addRootCategory(Category category) {

@@ -147,7 +147,7 @@ public class CategoryControllerTest {
     //                .andExpect(jsonPath("$.id").value(CATEGORY_ID))
     //                .andExpect(jsonPath("$.name").value(CATEGORY_NAME))
     //                .andExpect(jsonPath("$.subcategories").value(Collections.emptyList()))
-    //                .andDo(MockMvcRestDocumentation.document("categories/addNewCategory/exists",
+    //                .andDo(MockMvcRestDocumentation.document("categories/addNew/exists",
     //                        preprocessResponse(prettyPrint()),
     //                        PayloadDocumentation.requestFields(
     //                                PayloadDocumentation.fieldWithPath("name").description("Name of the new category")
@@ -168,7 +168,7 @@ public class CategoryControllerTest {
                 .andExpect(jsonPath("$.id").isNotEmpty())
                 .andExpect(jsonPath("$.name").value(CATEGORY_NAME_NOT_FOUND))
                 .andExpect(jsonPath("$.subcategories").isArray())
-                .andDo(MockMvcRestDocumentation.document("categories/addNewCategory/ok",
+                .andDo(MockMvcRestDocumentation.document("categories/addNew/ok",
                         preprocessResponse(prettyPrint()),
                         PayloadDocumentation.requestFields(
                                 PayloadDocumentation.fieldWithPath("name").description("Name of the new category"),
@@ -193,7 +193,7 @@ public class CategoryControllerTest {
                 .andExpect(jsonPath("$.id").value(CATEGORY_ID))
                 .andExpect(jsonPath("$.name").value(CATEGORY_NAME))
                 .andExpect(jsonPath("$.subcategories").isArray())
-                .andDo(MockMvcRestDocumentation.document("categories/updateCategory/ok",
+                .andDo(MockMvcRestDocumentation.document("categories/update/ok",
                         preprocessResponse(prettyPrint()),
                         PayloadDocumentation.requestFields(
                                 PayloadDocumentation.fieldWithPath("id")
@@ -218,7 +218,7 @@ public class CategoryControllerTest {
     //                .andExpect(jsonPath("$.id").isEmpty())
     //                .andExpect(jsonPath("$.name").isEmpty())
     //                .andExpect(jsonPath("$.subcategories").value(Collections.emptyList()))
-    //                .andDo(MockMvcRestDocumentation.document("categories/updateCategory/emptyName",
+    //                .andDo(MockMvcRestDocumentation.document("categories/update/emptyName",
     //                        preprocessResponse(prettyPrint()),
     //                        PayloadDocumentation.requestFields(
     //                                PayloadDocumentation.fieldWithPath("id")
@@ -248,7 +248,7 @@ public class CategoryControllerTest {
                 .andExpect(jsonPath("$[:1].id").value(CATEGORY_ID))
                 .andExpect(jsonPath("$[:1].name").value(CATEGORY_NAME))
                 .andExpect(jsonPath("$[:1].subcategories").isArray())
-                .andDo(MockMvcRestDocumentation.document("categories/deleteCategory/ok",
+                .andDo(MockMvcRestDocumentation.document("categories/deleteCategories/ok",
                         preprocessResponse(prettyPrint()),
                         PayloadDocumentation.responseFields(getResponseArrayFieldDescriptors())));
     }
@@ -268,7 +268,7 @@ public class CategoryControllerTest {
                 .andExpect(jsonPath("$[:1].id").value(CATEGORY_ID))
                 .andExpect(jsonPath("$[:1].name").value(CATEGORY_NAME))
                 .andExpect(jsonPath("$[:1].subcategories").isArray())
-                .andDo(MockMvcRestDocumentation.document("categories/getCategory/ok",
+                .andDo(MockMvcRestDocumentation.document("categories/getCategories/ok",
                         preprocessResponse(prettyPrint()),
                         PayloadDocumentation.responseFields(getResponseArrayFieldDescriptors())));
     }

@@ -72,7 +72,7 @@ public class SearchController extends AbstractController {
 
         public ProductFiltersBuilder category() {
             Category requestCategory = categoryService
-                    .getCategoryById(allRequestParams.getOrDefault("categoryId", null));
+                    .getById(allRequestParams.getOrDefault("categoryId", null));
 
             productFilters.add(product -> {
                 if(allRequestParams.getOrDefault("categoryId", null) == null) {

@@ -73,12 +73,29 @@ public class Category implements SimpleObject {
         return subcategories != null ? subcategories.equals(category.subcategories) : category.subcategories == null;
     }
 
+    public void update(Category category) {
+        if(category != null) {
+            id = category.getId();
+            name = category.getName();
+            subcategories.clear();
+            subcategories.addAll(category.getSubcategories());
+        }
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Category> getSubcategories() {
+        return subcategories;
+    }
+
+    public void setSubcategories(List<Category> subcategories) {
+        this.subcategories = subcategories;
     }
 
     @Override
@@ -91,11 +108,23 @@ public class Category implements SimpleObject {
         this.id = id;
     }
 
-    public List<Category> getSubcategories() {
-        return subcategories;
-    }
+    public Category getParentOfById(String categoryId) {
+        if(categoryId == null) {
+            return null;
+        }
 
-    public void setSubcategories(List<Category> subcategories) {
-        this.subcategories = subcategories;
+        if(id.equals(categoryId)) {
+            return null;
+        }
+
+        if(subcategories.stream()
+                .anyMatch(category -> category.getId().equals(categoryId))) {
+            return this;
+        } else {
+            return subcategories.stream()
+                    .map(subcategory -> subcategory.getParentOfById(categoryId))
+                    .findFirst()
+                    .orElse(null);
+        }
     }
 }

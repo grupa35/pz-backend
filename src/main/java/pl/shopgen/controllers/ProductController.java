@@ -8,14 +8,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.shopgen.models.Product;
 import pl.shopgen.repositories.ProductRepository;
-import pl.shopgen.models.SaleDTO;
 import pl.shopgen.services.IProductSaleService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/products")
-public class ProductController {
+public class ProductController extends AbstractController {
 
     private final ProductRepository productRepository;
 
@@ -27,47 +24,47 @@ public class ProductController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public Product addProduct(@RequestBody Product product) {
-        return productRepository.insert(product);
+    public String addProduct(@RequestBody Product product) {
+        return mapToJson(productRepository.insert(product));
     }
 
 
     @RequestMapping(value = "/{productId}", method = RequestMethod.DELETE)
-    public Product deleteProduct(@PathVariable("productId") String productId) {
-        Product product = productRepository.findById(productId).orElse(null);
+    public String deleteProduct(@PathVariable("productId") String productId) {
+        String jsonProduct = mapToJson(productRepository.findById(productId).orElse(null));
 
-        if(product != null) {
+        if(jsonProduct.isEmpty()) {
             productRepository.deleteById(productId);
         }
-        return product;
+        return jsonProduct;
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    public List<Product> deleteProducts() {
-        List<Product> products = productRepository.findAll();
+    public String deleteProducts() {
+        String jsonProducts = mapToJson(productRepository.findAll());
         productRepository.deleteAll();
-        return products;
+        return jsonProducts;
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public Product updateProduct(@RequestBody Product product) {
-        return productRepository.save(product);
+    public String updateProduct(@RequestBody Product product) {
+        return mapToJson(productRepository.save(product));
     }
 
     @RequestMapping(value = "/{productId}/sale", method = RequestMethod.GET)
     @ResponseBody
-    public SaleDTO getProductSale(@PathVariable("productId") String productId) {
-        return productSaleService.getSaleDTO(getProduct(productId));
+    public String getProductSale(@PathVariable("productId") String productId) {
+        return mapToJson(productSaleService.getSaleDTO(productRepository.findById(productId).orElse(null)));
     }
 
     @RequestMapping(value = "/{productId}", method = RequestMethod.GET)
     @ResponseBody
-    public Product getProduct(@PathVariable("productId") String productId) {
-        return productRepository.findById(productId).orElse(null);
+    public String getProduct(@PathVariable("productId") String productId) {
+        return mapToJson(productRepository.findById(productId).orElse(null));
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Product> getProducts() {
-        return productRepository.findAll();
+    public String getProducts() {
+        return mapToJson(productRepository.findAll());
     }
 }

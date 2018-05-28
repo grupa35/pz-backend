@@ -4,7 +4,11 @@ import pl.shopgen.models.Category;
 
 public interface ICategoryService {
 
-    Category getCategoryById(String categoryId);
+    Category getById(String categoryId);
 
-    Category addNewCategory(Category category, String parentCategoryId);
+    Category addNew(Category category, String parentCategoryId);
+
+    Category update(Category category);
+
+    Category deleteById(String categoryId);
 }

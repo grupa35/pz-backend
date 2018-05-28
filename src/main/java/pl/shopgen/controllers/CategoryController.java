@@ -36,14 +36,14 @@ public class CategoryController extends AbstractController {
             ApiErrorMessageBuilder errorMessageBuilder = ApiErrorMessageBuilder.getInstance();
             errorMessageBuilder.badParameter("name", "not exists");
             return mapToJson(new ErrorDTO(ApiStatusCode.BAD_ARGUMENT, errorMessageBuilder.build()));
-        } else if(parentCategoryId != null && categoryService.getCategoryById(parentCategoryId) == null) {
+        } else if(parentCategoryId != null && categoryService.getById(parentCategoryId) == null) {
             return mapToJson(new ErrorDTO(ApiStatusCode.OBJECT_EXISTS,
                     ApiErrorMessageBuilder.getInstance().notFound("Not found parent category by requested id")
                             .build()));
         } else {
             Category category = new Category();
             category.setName(categoryName);
-            return mapToJson(categoryService.addNewCategory(category, parentCategoryId));
+            return mapToJson(categoryService.addNew(category, parentCategoryId));
         }
     }
 
@@ -56,15 +56,13 @@ public class CategoryController extends AbstractController {
 
     @RequestMapping(value = "/{categoryId}", method = RequestMethod.DELETE)
     public String deleteCategory(@PathVariable("categoryId") String categoryId) {
-        String categoryJson = mapToJson(categoryRepository.findById(categoryId).orElse(null));
-        categoryRepository.deleteById(categoryId);
-        return categoryJson;
+        return mapToJson(categoryService.deleteById(categoryId));
     }
 
     @RequestMapping(value = "/{categoryId}", method = RequestMethod.GET)
     @ResponseBody
     public String getCategory(@PathVariable("categoryId") String categoryId) {
-        return mapToJson(categoryRepository.findById(categoryId).orElse(null));
+        return mapToJson(categoryService.getById(categoryId));
     }
 
     @RequestMapping(method = RequestMethod.PUT)
@@ -73,7 +71,7 @@ public class CategoryController extends AbstractController {
             return mapToJson(new ErrorDTO(ApiStatusCode.BAD_ARGUMENT, ApiErrorMessageBuilder.getInstance()
                     .badParameter("name", "Cannot create update category by setting empty name").build()));
         } else {
-            return mapToJson(categoryRepository.save(category));
+            return mapToJson(categoryService.update(category));
         }
     }
 
