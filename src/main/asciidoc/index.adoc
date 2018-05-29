@@ -320,6 +320,7 @@ include::{snippets}/auth/registration/ok/http-request.adoc[]
 include::{snippets}/auth/registration/ok/http-response.adoc[]
 
 .request fields
+include::{snippets}/auth/registration/ok/request-fields.adoc[]
 
 .response fields
 include::{snippets}/auth/registration/ok/response-fields.adoc[]
