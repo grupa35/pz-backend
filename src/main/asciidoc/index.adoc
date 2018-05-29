@@ -77,7 +77,6 @@ include::{snippets}/roles/getRoles/ok/response-fields.adoc[]
 
 ==== Bad request: not found
 
-
 == RESET USER PASSWORD
 === Reset Password
 ==== Good request
@@ -183,6 +182,83 @@ include::{snippets}/categories/deleteCategories/ok/http-response.adoc[]
 .response fields
 include::{snippets}/categories/deleteCategories/ok/response-fields.adoc[]
 
+== SALE
+=== Get sale
+==== Goood request
+.http request
+include::{snippets}/sales/getSale/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/sales/getSale/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/sales/getSale/ok/response-fields.adoc[]
+
+=== Get sale
+==== Goood request
+
+.http request
+include::{snippets}/sales/getSales/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/sales/getSales/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/sales/getSales/ok/response-fields.adoc[]
+
+=== Add sale
+==== Goood request
+
+.http request
+include::{snippets}/sales/addSale/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/sales/addSale/ok/http-response.adoc[]
+
+.request fields
+include::{snippets}/sales/addSale/ok/request-fields.adoc[]
+
+.response fields
+include::{snippets}/sales/addSale/ok/response-fields.adoc[]
+
+=== Update sale
+==== Goood request
+
+.http request
+include::{snippets}/sales/updateSale/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/sales/updateSale/ok/http-response.adoc[]
+
+.request fields
+include::{snippets}/sales/updateSale/ok/request-fields.adoc[]
+
+.response fields
+include::{snippets}/sales/updateSale/ok/response-fields.adoc[]
+
+=== Delete sale
+==== Goood request
+
+.http request
+include::{snippets}/sales/deleteSale/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/sales/deleteSale/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/sales/deleteSale/ok/response-fields.adoc[]
+
+=== Delete sales
+==== Goood request
+
+.http request
+include::{snippets}/sales/deleteSales/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/sales/deleteSales/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/sales/deleteSales/ok/response-fields.adoc[]
 
 == USER
 === Get users
