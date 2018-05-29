@@ -1,5 +1,8 @@
 package pl.shopgen.models;
 
+import org.springframework.restdocs.payload.FieldDescriptor;
+import org.springframework.restdocs.payload.PayloadDocumentation;
+
 import java.math.BigDecimal;
 
 public class SaleDTO {
@@ -31,6 +34,14 @@ public class SaleDTO {
             priceAfterSale = other.priceAfterSale;
             saleValue = other.saleValue;
         }
+    }
+
+    public static FieldDescriptor[] fieldsDescriptor() {
+        return new FieldDescriptor[]{
+                PayloadDocumentation.fieldWithPath("status").description("Status of the response"),
+                PayloadDocumentation.fieldWithPath("errorMessage").type("String").description(
+                        "Description of the error."),
+                };
     }
 
     public static Builder builder() {
