@@ -53,8 +53,8 @@ public class SaleControllerTest {
     private static final String SALE_PRODUCT_ID = "sale213ok213product213id";
     private static final double SALE_PERCENT_VALUE = 0.33;
     private static final BigDecimal SALE_NOMINAL_VALUE = new BigDecimal(12.50);
-    private static final LocalDate SALE_START_DATE = LocalDate.of(2018, 05, 28);
-    private static final LocalDate SALE_END_DATE = LocalDate.of(2019, 06, 12);
+    private static final LocalDate SALE_START_DATE = LocalDate.now().plusDays(1);
+    private static final LocalDate SALE_END_DATE = LocalDate.now().plusDays(200);
     private static final SaleType SALE_TYPE_NOMINAL = NOMINAL;
     private static final String SALE_PRODUCT_ID_NOT_FOUND = "sale213not213ok213product213id";
     private static final String SALE_ID_NOT_FOUND = "sale123not123ok123id";
