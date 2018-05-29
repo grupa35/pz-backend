@@ -308,3 +308,18 @@ include::{snippets}/users/deleteUsers/ok/http-response.adoc[]
 
 .response fields
 include::{snippets}/users/deleteUsers/ok/response-fields.adoc[]
+
+== Auth
+=== Registration
+==== Good request
+
+.http request
+include::{snippets}/auth/registration/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/auth/registration/ok/http-response.adoc[]
+
+.request fields
+
+.response fields
+include::{snippets}/auth/registration/ok/response-fields.adoc[]

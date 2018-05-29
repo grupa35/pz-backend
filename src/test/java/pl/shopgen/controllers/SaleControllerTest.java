@@ -400,7 +400,7 @@ public class SaleControllerTest {
                 .andExpect(jsonPath("$[:1].endDate.monthValue").value(SALE_END_DATE.getMonthValue()))
                 .andExpect(jsonPath("$[:1].endDate.dayOfMonth").value(SALE_END_DATE.getDayOfMonth()))
                 .andExpect(jsonPath("$[:1].saleType").value("NOMINAL"))
-                .andDo(MockMvcRestDocumentation.document("sales/getSale/ok",
+                .andDo(MockMvcRestDocumentation.document("sales/getSales/ok",
                         preprocessResponse(prettyPrint()),
                         PayloadDocumentation.responseFields(getResponseArrayFieldDescriptors()
                         )));

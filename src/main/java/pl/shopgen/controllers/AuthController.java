@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.shopgen.models.RegistrationCredentialsDTO;
 import pl.shopgen.services.AuthService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 public class AuthController extends AbstractController {
 
@@ -18,6 +21,8 @@ public class AuthController extends AbstractController {
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String register(@RequestBody RegistrationCredentialsDTO registrationCredentialsDTO) {
-        return mapToJson(authService.register(registrationCredentialsDTO));
+        Map<String, Integer> response = new HashMap<>();
+        response.put("result", authService.register(registrationCredentialsDTO));
+        return mapToJson(response);
     }
 }
