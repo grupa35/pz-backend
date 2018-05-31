@@ -34,6 +34,18 @@ public class User implements SimpleObject, UserDetails {
         this.surname = surname;
     }
 
+    public User(User other)
+   {
+     if(other!=null)
+       this.id=other.id;
+       this.name=other.name;
+       this.surname=other.surname;
+       this.password=other.password;
+       this.email=other.email;
+       this.role=other.role;
+       this.enabled=other.enabled;
+    }
+
     @Override
     public int hashCode() {
         int result = super.hashCode();
