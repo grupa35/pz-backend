@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 @Document
 public class User implements SimpleObject, UserDetails {
@@ -16,17 +17,19 @@ public class User implements SimpleObject, UserDetails {
     private String password;
     private String email;
     private Role role;
+    private List<Address> addresses;
     private boolean enabled = true;
 
     public User() {
     }
 
-    public User(String name, String surname, String password, String email, Role role) {
+    public User(String name, String surname, String password, String email, Role role, List<Address> addresses) {
         this.name = name;
         this.surname = surname;
         this.password = password;
         this.email = email;
         this.role = role;
+        this.addresses = addresses;
     }
 
     public User(String name, String surname) {
@@ -34,33 +37,47 @@ public class User implements SimpleObject, UserDetails {
         this.surname = surname;
     }
 
+    public User(User other)
+   {
+     if(other!=null)
+       this.id=other.id;
+       this.name=other.name;
+       this.surname=other.surname;
+       this.password=other.password;
+       this.email=other.email;
+       this.role=other.role;
+       this.addresses=other.addresses;
+       this.enabled=other.enabled;
+    }
+
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
+    final public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
+        result = 31 * result + (addresses != null ? addresses.hashCode() : 0);
         result = 31 * result + (enabled ? 1 : 0);
         return result;
     }
 
     @Override
-    public boolean equals(Object o) {
+    final public boolean equals(Object o) {
         if(this == o) {
             return true;
         }
         if(!(o instanceof User)) {
             return false;
         }
-        if(!super.equals(o)) {
-            return false;
-        }
 
         User user = (User) o;
 
         if(enabled != user.enabled) {
+            return false;
+        }
+        if(id != null ? !id.equals(user.id) : user.id != null) {
             return false;
         }
         if(name != null ? !name.equals(user.name) : user.name != null) {
@@ -73,6 +90,10 @@ public class User implements SimpleObject, UserDetails {
             return false;
         }
         if(email != null ? !email.equals(user.email) : user.email != null) {
+            return false;
+        }
+
+        if(addresses != null ? !addresses.equals(user.addresses) : user.addresses != null) {
             return false;
         }
         return role != null ? role.equals(user.role) : user.role == null;
@@ -161,5 +182,13 @@ public class User implements SimpleObject, UserDetails {
     @Override
     public void setId(String id) {
         this.id = id;
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
     }
 }
