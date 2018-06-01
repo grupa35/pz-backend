@@ -18,7 +18,7 @@ public class NewPasswordDTO {
     }
 
     @Override
-    public int hashCode() {
+    final public int hashCode() {
         int result = oldPassword != null ? oldPassword.hashCode() : 0;
         result = 31 * result + (newPassword != null ? newPassword.hashCode() : 0);
         result = 31 * result + (reNewPassword != null ? reNewPassword.hashCode() : 0);
@@ -26,7 +26,7 @@ public class NewPasswordDTO {
     }
 
     @Override
-    public boolean equals(Object o) {
+    final public boolean equals(Object o) {
         if(this == o) {
             return true;
         }

@@ -14,14 +14,14 @@ public class ResponseStatusDTO {
     }
 
     @Override
-    public int hashCode() {
+    final public int hashCode() {
         int result = code;
         result = 31 * result + (message != null ? message.hashCode() : 0);
         return result;
     }
 
     @Override
-    public boolean equals(Object o) {
+    final public boolean equals(Object o) {
         if(this == o) {
             return true;
         }
