@@ -47,8 +47,8 @@ public class User implements SimpleObject, UserDetails {
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
+    final public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
@@ -59,20 +59,20 @@ public class User implements SimpleObject, UserDetails {
     }
 
     @Override
-    public boolean equals(Object o) {
+    final public boolean equals(Object o) {
         if(this == o) {
             return true;
         }
         if(!(o instanceof User)) {
             return false;
         }
-        if(!super.equals(o)) {
-            return false;
-        }
 
         User user = (User) o;
 
         if(enabled != user.enabled) {
+            return false;
+        }
+        if(id != null ? !id.equals(user.id) : user.id != null) {
             return false;
         }
         if(name != null ? !name.equals(user.name) : user.name != null) {
