@@ -54,6 +54,7 @@ public class ChangePasswordControllerTest {
     UserRepository userRepository;
     @MockBean
     BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @MockBean
     UserService userService;
 

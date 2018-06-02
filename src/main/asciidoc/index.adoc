@@ -309,6 +309,18 @@ include::{snippets}/users/deleteUsers/ok/http-response.adoc[]
 .response fields
 include::{snippets}/users/deleteUsers/ok/response-fields.adoc[]
 
+=== Get current user
+==== Good request
+
+.http request
+include::{snippets}/users/getCurrentUser/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/users/getCurrentUser/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/users/getCurrentUser/ok/response-fields.adoc[]
+
 == Auth
 === Registration
 ==== Good request

@@ -1,5 +1,7 @@
 package pl.shopgen.controllers;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,5 +47,12 @@ public class UserController extends AbstractController {
     @RequestMapping(method = RequestMethod.GET)
     public String getUsers() {
         return mapToJson(userRepository.findAll());
+    }
+
+    @RequestMapping(value = "/current", method = RequestMethod.GET)
+    public String getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        return mapToJson(userRepository.findByEmail(email).orElse(null));
     }
 }

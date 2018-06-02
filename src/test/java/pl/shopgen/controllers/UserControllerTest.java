@@ -4,6 +4,7 @@ import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -12,6 +13,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.PayloadDocumentation;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -44,8 +48,16 @@ public class UserControllerTest {
 
     private String address_id;
 
+    private String logged_email = "test@test.pl";
+
     @MockBean
     private UserRepository userRepository;
+
+    @Mock
+    private SecurityContext securityContext;
+
+    @Mock
+    private Authentication authentication;
 
     @Autowired
     private MockMvc mockMvc;
@@ -60,6 +72,20 @@ public class UserControllerTest {
 
         Mockito.when(userRepository.findAll())
                 .then(invocation -> Collections.singletonList(createUserDatabaseMock(user_id)));
+
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenAnswer(invocation -> {
+            if(invocation.getArgument(0).equals(logged_email)) {
+                User user = createUserDatabaseMock(user_id);
+                user.setEmail(logged_email);
+                return Optional.of(user);
+            } else {
+                return Optional.empty();
+            }
+        });
+
+        Mockito.when(authentication.getName()).thenReturn(logged_email);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 
     private User createUserDatabaseMock(String userId) {
@@ -168,6 +194,12 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.credentialsNonExpired")
                         .value(createUserDatabaseMock(user_id).isCredentialsNonExpired()))
                 .andExpect(jsonPath("$.username").value(createUserDatabaseMock(user_id).getUsername()))
+                .andExpect(jsonPath("$.addresses[:1].id").value(getAddressMock().getId()))
+                .andExpect(jsonPath("$.addresses[:1].postalCity").value(getAddressMock().getPostalCity()))
+                .andExpect(jsonPath("$.addresses[:1].postalNumber").value(getAddressMock().getPostalNumber()))
+                .andExpect(jsonPath("$.addresses[:1].firstName").value(getAddressMock().getFirstName()))
+                .andExpect(jsonPath("$.addresses[:1].secondName").value(getAddressMock().getSecondName()))
+                .andExpect(jsonPath("$.addresses[:1].details").value(getAddressMock().getDetails()))
                 .andDo(MockMvcRestDocumentation
                         .document("users/deleteUser/ok", preprocessResponse(prettyPrint()),
                                 PayloadDocumentation.responseFields(getResponseFieldDescriptors())));
@@ -220,6 +252,12 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.credentialsNonExpired")
                         .value(createUserDatabaseMock(user_id).isCredentialsNonExpired()))
                 .andExpect(jsonPath("$.username").value(createUserDatabaseMock(user_id).getUsername()))
+                .andExpect(jsonPath("$.addresses[:1].id").value(getAddressMock().getId()))
+                .andExpect(jsonPath("$.addresses[:1].postalCity").value(getAddressMock().getPostalCity()))
+                .andExpect(jsonPath("$.addresses[:1].postalNumber").value(getAddressMock().getPostalNumber()))
+                .andExpect(jsonPath("$.addresses[:1].firstName").value(getAddressMock().getFirstName()))
+                .andExpect(jsonPath("$.addresses[:1].secondName").value(getAddressMock().getSecondName()))
+                .andExpect(jsonPath("$.addresses[:1].details").value(getAddressMock().getDetails()))
                 .andDo(MockMvcRestDocumentation
                         .document("users/getUser/ok", preprocessResponse(prettyPrint()),
                                 PayloadDocumentation.responseFields(getResponseFieldDescriptors())));
@@ -245,8 +283,45 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$[:1].credentialsNonExpired")
                         .value(createUserDatabaseMock(user_id).isCredentialsNonExpired()))
                 .andExpect(jsonPath("$[:1].username").value(createUserDatabaseMock(user_id).getUsername()))
+                .andExpect(jsonPath("$[:1].addresses[:1].id").value(getAddressMock().getId()))
+                .andExpect(jsonPath("$[:1].addresses[:1].postalCity").value(getAddressMock().getPostalCity()))
+                .andExpect(jsonPath("$[:1].addresses[:1].postalNumber").value(getAddressMock().getPostalNumber()))
+                .andExpect(jsonPath("$[:1].addresses[:1].firstName").value(getAddressMock().getFirstName()))
+                .andExpect(jsonPath("$[:1].addresses[:1].secondName").value(getAddressMock().getSecondName()))
+                .andExpect(jsonPath("$[:1].addresses[:1].details").value(getAddressMock().getDetails()))
                 .andDo(MockMvcRestDocumentation
                         .document("users/getUsers/ok", preprocessResponse(prettyPrint()),
                                 PayloadDocumentation.responseFields(getResponseArrayFieldDescriptors())));
+    }
+
+    @Test
+    public void getCurrentUserOkTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/current"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(user_id))
+                .andExpect(jsonPath("$.name").value(createUserDatabaseMock(user_id).getName()))
+                .andExpect(jsonPath("$.surname").value(createUserDatabaseMock(user_id).getSurname()))
+                .andExpect(jsonPath("$.email").value(createUserDatabaseMock(user_id).getEmail()))
+                .andExpect(jsonPath("$.role.id").value(createUserDatabaseMock(user_id).getRole().getId()))
+                .andExpect(jsonPath("$.role.name").value(createUserDatabaseMock(user_id).getRole().getName()))
+                .andExpect(jsonPath("$.enabled").value(createUserDatabaseMock(user_id).isEnabled()))
+                .andExpect(jsonPath("$.authorities").value(createUserDatabaseMock(user_id).getAuthorities()))
+                .andExpect(jsonPath("$.accountNonExpired")
+                        .value(createUserDatabaseMock(user_id).isAccountNonExpired()))
+                .andExpect(jsonPath("$.accountNonLocked")
+                        .value(createUserDatabaseMock(user_id).isAccountNonLocked()))
+                .andExpect(jsonPath("$.credentialsNonExpired")
+                        .value(createUserDatabaseMock(user_id).isCredentialsNonExpired()))
+                .andExpect(jsonPath("$.username").value(createUserDatabaseMock(user_id).getUsername()))
+                .andExpect(jsonPath("$.addresses[:1].id").value(getAddressMock().getId()))
+                .andExpect(jsonPath("$.addresses[:1].postalCity").value(getAddressMock().getPostalCity()))
+                .andExpect(jsonPath("$.addresses[:1].postalNumber").value(getAddressMock().getPostalNumber()))
+                .andExpect(jsonPath("$.addresses[:1].firstName").value(getAddressMock().getFirstName()))
+                .andExpect(jsonPath("$.addresses[:1].secondName").value(getAddressMock().getSecondName()))
+                .andExpect(jsonPath("$.addresses[:1].details").value(getAddressMock().getDetails()))
+                .andDo(MockMvcRestDocumentation
+                        .document("users/getCurrentUser/ok", preprocessResponse(prettyPrint()),
+                                PayloadDocumentation.responseFields(getResponseFieldDescriptors())));
     }
 }
