@@ -37,12 +37,12 @@ public class Address implements SimpleObject{
 
     public void cloneProperties(Address address)
     {
-        this.addressName = address.getAddressName();
-        this.firstName = address.getFirstName();
-        this.secondName = address.getSecondName();
-        this.postalNumber = address.getPostalNumber();
-        this.postalCity = address.getPostalCity();
-        this.details = address.getDetails();
+        addressName = address.getAddressName();
+        firstName = address.getFirstName();
+        secondName = address.getSecondName();
+        postalNumber = address.getPostalNumber();
+        postalCity = address.getPostalCity();
+        details = address.getDetails();
     }
 
     public String getAddressName() {
@@ -94,34 +94,7 @@ public class Address implements SimpleObject{
     }
 
     @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Address address = (Address) o;
-
-        if (id != null ? !id.equals(address.id) : address.id != null) return false;
-        if (addressName != null ? !addressName.equals(address.addressName) : address.addressName != null) return false;
-        if (firstName != null ? !firstName.equals(address.firstName) : address.firstName != null) return false;
-        if (secondName != null ? !secondName.equals(address.secondName) : address.secondName != null) return false;
-        if (postalNumber != null ? !postalNumber.equals(address.postalNumber) : address.postalNumber != null)
-            return false;
-        if (postalCity != null ? !postalCity.equals(address.postalCity) : address.postalCity != null) return false;
-        return details != null ? details.equals(address.details) : address.details == null;
-    }
-
-    @Override
-    public int hashCode() {
+    final public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (addressName != null ? addressName.hashCode() : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
@@ -130,5 +103,47 @@ public class Address implements SimpleObject{
         result = 31 * result + (postalCity != null ? postalCity.hashCode() : 0);
         result = 31 * result + (details != null ? details.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    final public boolean equals(Object o) {
+        if(this == o) {
+            return true;
+        }
+        if(!(o instanceof Address)) {
+            return false;
+        }
+
+        Address address = (Address) o;
+
+        if(id != null ? !id.equals(address.id) : address.id != null) {
+            return false;
+        }
+        if(addressName != null ? !addressName.equals(address.addressName) : address.addressName != null) {
+            return false;
+        }
+        if(firstName != null ? !firstName.equals(address.firstName) : address.firstName != null) {
+            return false;
+        }
+        if(secondName != null ? !secondName.equals(address.secondName) : address.secondName != null) {
+            return false;
+        }
+        if(postalNumber != null ? !postalNumber.equals(address.postalNumber) : address.postalNumber != null) {
+            return false;
+        }
+        if(postalCity != null ? !postalCity.equals(address.postalCity) : address.postalCity != null) {
+            return false;
+        }
+        return details != null ? details.equals(address.details) : address.details == null;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 }

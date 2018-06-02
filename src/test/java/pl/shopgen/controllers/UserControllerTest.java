@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import pl.shopgen.models.Address;
 import pl.shopgen.models.Role;
 import pl.shopgen.models.User;
 import pl.shopgen.repositories.UserRepository;
@@ -39,7 +40,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 public class UserControllerTest {
 
-    private String USER_ID;
+    private String user_id;
+
+    private String address_id;
 
     @MockBean
     private UserRepository userRepository;
@@ -49,13 +52,14 @@ public class UserControllerTest {
 
     @Before
     public void setUp() {
-        USER_ID = new ObjectId().toString();
+        user_id = new ObjectId().toString();
+        address_id = new ObjectId().toString();
 
         Mockito.when(userRepository.findById(Mockito.anyString()))
                 .then(invocation -> Optional.of(createUserDatabaseMock(invocation.getArgument(0))));
 
         Mockito.when(userRepository.findAll())
-                .then(invocation -> Collections.singletonList(createUserDatabaseMock(USER_ID)));
+                .then(invocation -> Collections.singletonList(createUserDatabaseMock(user_id)));
     }
 
     private User createUserDatabaseMock(String userId) {
@@ -69,7 +73,20 @@ public class UserControllerTest {
         Role role = new Role("customer");
         role.setId("987655");
         user.setRole(role);
+        user.setAddresses(Collections.singletonList(getAddressMock()));
         return user;
+    }
+
+    private Address getAddressMock() {
+        Address address = new Address();
+        address.setId(address_id);
+        address.setAddressName("dom");
+        address.setFirstName("Jan");
+        address.setSecondName("Kowalski");
+        address.setPostalNumber("12-123");
+        address.setPostalCity("Sosnowiec");
+        address.setDetails("ul. Sosnowska 15");
+        return address;
     }
 
     @Test
@@ -77,21 +94,27 @@ public class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/users"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[:1].id").value(USER_ID))
-                .andExpect(jsonPath("$[:1].name").value(createUserDatabaseMock(USER_ID).getName()))
-                .andExpect(jsonPath("$[:1].surname").value(createUserDatabaseMock(USER_ID).getSurname()))
-                .andExpect(jsonPath("$[:1].email").value(createUserDatabaseMock(USER_ID).getEmail()))
-                .andExpect(jsonPath("$[:1].role.id").value(createUserDatabaseMock(USER_ID).getRole().getId()))
-                .andExpect(jsonPath("$[:1].role.name").value(createUserDatabaseMock(USER_ID).getRole().getName()))
-                .andExpect(jsonPath("$[:1].enabled").value(createUserDatabaseMock(USER_ID).isEnabled()))
-                .andExpect(jsonPath("$[:1].authorities").value(createUserDatabaseMock(USER_ID).getAuthorities()))
+                .andExpect(jsonPath("$[:1].id").value(user_id))
+                .andExpect(jsonPath("$[:1].name").value(createUserDatabaseMock(user_id).getName()))
+                .andExpect(jsonPath("$[:1].surname").value(createUserDatabaseMock(user_id).getSurname()))
+                .andExpect(jsonPath("$[:1].email").value(createUserDatabaseMock(user_id).getEmail()))
+                .andExpect(jsonPath("$[:1].role.id").value(createUserDatabaseMock(user_id).getRole().getId()))
+                .andExpect(jsonPath("$[:1].role.name").value(createUserDatabaseMock(user_id).getRole().getName()))
+                .andExpect(jsonPath("$[:1].enabled").value(createUserDatabaseMock(user_id).isEnabled()))
+                .andExpect(jsonPath("$[:1].authorities").value(createUserDatabaseMock(user_id).getAuthorities()))
                 .andExpect(jsonPath("$[:1].accountNonExpired")
-                        .value(createUserDatabaseMock(USER_ID).isAccountNonExpired()))
+                        .value(createUserDatabaseMock(user_id).isAccountNonExpired()))
                 .andExpect(jsonPath("$[:1].accountNonLocked")
-                        .value(createUserDatabaseMock(USER_ID).isAccountNonLocked()))
+                        .value(createUserDatabaseMock(user_id).isAccountNonLocked()))
                 .andExpect(jsonPath("$[:1].credentialsNonExpired")
-                        .value(createUserDatabaseMock(USER_ID).isCredentialsNonExpired()))
-                .andExpect(jsonPath("$[:1].username").value(createUserDatabaseMock(USER_ID).getUsername()))
+                        .value(createUserDatabaseMock(user_id).isCredentialsNonExpired()))
+                .andExpect(jsonPath("$[:1].username").value(createUserDatabaseMock(user_id).getUsername()))
+                .andExpect(jsonPath("$[:1].addresses[:1].id").value(getAddressMock().getId()))
+                .andExpect(jsonPath("$[:1].addresses[:1].postalCity").value(getAddressMock().getPostalCity()))
+                .andExpect(jsonPath("$[:1].addresses[:1].postalNumber").value(getAddressMock().getPostalNumber()))
+                .andExpect(jsonPath("$[:1].addresses[:1].firstName").value(getAddressMock().getFirstName()))
+                .andExpect(jsonPath("$[:1].addresses[:1].secondName").value(getAddressMock().getSecondName()))
+                .andExpect(jsonPath("$[:1].addresses[:1].details").value(getAddressMock().getDetails()))
                 .andDo(MockMvcRestDocumentation
                         .document("users/deleteUsers/ok", preprocessResponse(prettyPrint()),
                                 PayloadDocumentation.responseFields(getResponseArrayFieldDescriptors())));
@@ -108,6 +131,15 @@ public class UserControllerTest {
                 PayloadDocumentation.fieldWithPath("[].role.name").description("Role name"),
                 PayloadDocumentation.fieldWithPath("[].enabled").description("Check if user is enabled"),
                 PayloadDocumentation.fieldWithPath("[].authorities").description("..."),
+                PayloadDocumentation.fieldWithPath("[].addresses").description("User addresses"),
+                PayloadDocumentation.fieldWithPath("[].addresses[].id").description("Address id"),
+                PayloadDocumentation.fieldWithPath("[].addresses[].addressName").description("Address name"),
+                PayloadDocumentation.fieldWithPath("[].addresses[].firstName").description("Receiver first name"),
+                PayloadDocumentation.fieldWithPath("[].addresses[].secondName").description("Receiver second name"),
+                PayloadDocumentation.fieldWithPath("[].addresses[].postalNumber").description("Receiver postal number"),
+                PayloadDocumentation.fieldWithPath("[].addresses[].postalCity").description("Receiver postal city"),
+                PayloadDocumentation.fieldWithPath("[].addresses[].details").description(
+                        "Receiver details like street and house number"),
                 PayloadDocumentation
                         .fieldWithPath("[].accountNonExpired").description("Check if account is non expired"),
                 PayloadDocumentation.fieldWithPath("[].accountNonLocked").description("Check if account is non locked"),
@@ -120,22 +152,22 @@ public class UserControllerTest {
 
     @Test
     public void deleteUserOkTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/users/" + USER_ID))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/users/" + user_id))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(USER_ID))
-                .andExpect(jsonPath("$.name").value(createUserDatabaseMock(USER_ID).getName()))
-                .andExpect(jsonPath("$.surname").value(createUserDatabaseMock(USER_ID).getSurname()))
-                .andExpect(jsonPath("$.email").value(createUserDatabaseMock(USER_ID).getEmail()))
-                .andExpect(jsonPath("$.role.id").value(createUserDatabaseMock(USER_ID).getRole().getId()))
-                .andExpect(jsonPath("$.role.name").value(createUserDatabaseMock(USER_ID).getRole().getName()))
-                .andExpect(jsonPath("$.enabled").value(createUserDatabaseMock(USER_ID).isEnabled()))
-                .andExpect(jsonPath("$.authorities").value(createUserDatabaseMock(USER_ID).getAuthorities()))
-                .andExpect(jsonPath("$.accountNonExpired").value(createUserDatabaseMock(USER_ID).isAccountNonExpired()))
-                .andExpect(jsonPath("$.accountNonLocked").value(createUserDatabaseMock(USER_ID).isAccountNonLocked()))
+                .andExpect(jsonPath("$.id").value(user_id))
+                .andExpect(jsonPath("$.name").value(createUserDatabaseMock(user_id).getName()))
+                .andExpect(jsonPath("$.surname").value(createUserDatabaseMock(user_id).getSurname()))
+                .andExpect(jsonPath("$.email").value(createUserDatabaseMock(user_id).getEmail()))
+                .andExpect(jsonPath("$.role.id").value(createUserDatabaseMock(user_id).getRole().getId()))
+                .andExpect(jsonPath("$.role.name").value(createUserDatabaseMock(user_id).getRole().getName()))
+                .andExpect(jsonPath("$.enabled").value(createUserDatabaseMock(user_id).isEnabled()))
+                .andExpect(jsonPath("$.authorities").value(createUserDatabaseMock(user_id).getAuthorities()))
+                .andExpect(jsonPath("$.accountNonExpired").value(createUserDatabaseMock(user_id).isAccountNonExpired()))
+                .andExpect(jsonPath("$.accountNonLocked").value(createUserDatabaseMock(user_id).isAccountNonLocked()))
                 .andExpect(jsonPath("$.credentialsNonExpired")
-                        .value(createUserDatabaseMock(USER_ID).isCredentialsNonExpired()))
-                .andExpect(jsonPath("$.username").value(createUserDatabaseMock(USER_ID).getUsername()))
+                        .value(createUserDatabaseMock(user_id).isCredentialsNonExpired()))
+                .andExpect(jsonPath("$.username").value(createUserDatabaseMock(user_id).getUsername()))
                 .andDo(MockMvcRestDocumentation
                         .document("users/deleteUser/ok", preprocessResponse(prettyPrint()),
                                 PayloadDocumentation.responseFields(getResponseFieldDescriptors())));
@@ -152,6 +184,15 @@ public class UserControllerTest {
                 PayloadDocumentation.fieldWithPath("role.name").description("Role name"),
                 PayloadDocumentation.fieldWithPath("enabled").description("Check if user is enabled"),
                 PayloadDocumentation.fieldWithPath("authorities").description("..."),
+                PayloadDocumentation.fieldWithPath("addresses").description("User addresses"),
+                PayloadDocumentation.fieldWithPath("addresses[].id").description("Address id"),
+                PayloadDocumentation.fieldWithPath("addresses[].addressName").description("Address name"),
+                PayloadDocumentation.fieldWithPath("addresses[].firstName").description("Receiver first name"),
+                PayloadDocumentation.fieldWithPath("addresses[].secondName").description("Receiver second name"),
+                PayloadDocumentation.fieldWithPath("addresses[].postalNumber").description("Receiver postal number"),
+                PayloadDocumentation.fieldWithPath("addresses[].postalCity").description("Receiver postal city"),
+                PayloadDocumentation.fieldWithPath("addresses[].details").description(
+                        "Receiver details like street and house number"),
                 PayloadDocumentation.fieldWithPath("accountNonExpired").description("Check if account is non expired"),
                 PayloadDocumentation.fieldWithPath("accountNonLocked").description("Check if account is non locked"),
                 PayloadDocumentation.fieldWithPath("credentialsNonExpired").description(
@@ -163,22 +204,22 @@ public class UserControllerTest {
 
     @Test
     public void getUserOkTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/" + USER_ID))
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/" + user_id))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(USER_ID))
-                .andExpect(jsonPath("$.name").value(createUserDatabaseMock(USER_ID).getName()))
-                .andExpect(jsonPath("$.surname").value(createUserDatabaseMock(USER_ID).getSurname()))
-                .andExpect(jsonPath("$.email").value(createUserDatabaseMock(USER_ID).getEmail()))
-                .andExpect(jsonPath("$.role.id").value(createUserDatabaseMock(USER_ID).getRole().getId()))
-                .andExpect(jsonPath("$.role.name").value(createUserDatabaseMock(USER_ID).getRole().getName()))
-                .andExpect(jsonPath("$.enabled").value(createUserDatabaseMock(USER_ID).isEnabled()))
-                .andExpect(jsonPath("$.authorities").value(createUserDatabaseMock(USER_ID).getAuthorities()))
-                .andExpect(jsonPath("$.accountNonExpired").value(createUserDatabaseMock(USER_ID).isAccountNonExpired()))
-                .andExpect(jsonPath("$.accountNonLocked").value(createUserDatabaseMock(USER_ID).isAccountNonLocked()))
+                .andExpect(jsonPath("$.id").value(user_id))
+                .andExpect(jsonPath("$.name").value(createUserDatabaseMock(user_id).getName()))
+                .andExpect(jsonPath("$.surname").value(createUserDatabaseMock(user_id).getSurname()))
+                .andExpect(jsonPath("$.email").value(createUserDatabaseMock(user_id).getEmail()))
+                .andExpect(jsonPath("$.role.id").value(createUserDatabaseMock(user_id).getRole().getId()))
+                .andExpect(jsonPath("$.role.name").value(createUserDatabaseMock(user_id).getRole().getName()))
+                .andExpect(jsonPath("$.enabled").value(createUserDatabaseMock(user_id).isEnabled()))
+                .andExpect(jsonPath("$.authorities").value(createUserDatabaseMock(user_id).getAuthorities()))
+                .andExpect(jsonPath("$.accountNonExpired").value(createUserDatabaseMock(user_id).isAccountNonExpired()))
+                .andExpect(jsonPath("$.accountNonLocked").value(createUserDatabaseMock(user_id).isAccountNonLocked()))
                 .andExpect(jsonPath("$.credentialsNonExpired")
-                        .value(createUserDatabaseMock(USER_ID).isCredentialsNonExpired()))
-                .andExpect(jsonPath("$.username").value(createUserDatabaseMock(USER_ID).getUsername()))
+                        .value(createUserDatabaseMock(user_id).isCredentialsNonExpired()))
+                .andExpect(jsonPath("$.username").value(createUserDatabaseMock(user_id).getUsername()))
                 .andDo(MockMvcRestDocumentation
                         .document("users/getUser/ok", preprocessResponse(prettyPrint()),
                                 PayloadDocumentation.responseFields(getResponseFieldDescriptors())));
@@ -189,21 +230,21 @@ public class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/users"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[:1].id").value(USER_ID))
-                .andExpect(jsonPath("$[:1].name").value(createUserDatabaseMock(USER_ID).getName()))
-                .andExpect(jsonPath("$[:1].surname").value(createUserDatabaseMock(USER_ID).getSurname()))
-                .andExpect(jsonPath("$[:1].email").value(createUserDatabaseMock(USER_ID).getEmail()))
-                .andExpect(jsonPath("$[:1].role.id").value(createUserDatabaseMock(USER_ID).getRole().getId()))
-                .andExpect(jsonPath("$[:1].role.name").value(createUserDatabaseMock(USER_ID).getRole().getName()))
-                .andExpect(jsonPath("$[:1].enabled").value(createUserDatabaseMock(USER_ID).isEnabled()))
-                .andExpect(jsonPath("$[:1].authorities").value(createUserDatabaseMock(USER_ID).getAuthorities()))
+                .andExpect(jsonPath("$[:1].id").value(user_id))
+                .andExpect(jsonPath("$[:1].name").value(createUserDatabaseMock(user_id).getName()))
+                .andExpect(jsonPath("$[:1].surname").value(createUserDatabaseMock(user_id).getSurname()))
+                .andExpect(jsonPath("$[:1].email").value(createUserDatabaseMock(user_id).getEmail()))
+                .andExpect(jsonPath("$[:1].role.id").value(createUserDatabaseMock(user_id).getRole().getId()))
+                .andExpect(jsonPath("$[:1].role.name").value(createUserDatabaseMock(user_id).getRole().getName()))
+                .andExpect(jsonPath("$[:1].enabled").value(createUserDatabaseMock(user_id).isEnabled()))
+                .andExpect(jsonPath("$[:1].authorities").value(createUserDatabaseMock(user_id).getAuthorities()))
                 .andExpect(jsonPath("$[:1].accountNonExpired")
-                        .value(createUserDatabaseMock(USER_ID).isAccountNonExpired()))
+                        .value(createUserDatabaseMock(user_id).isAccountNonExpired()))
                 .andExpect(jsonPath("$[:1].accountNonLocked")
-                        .value(createUserDatabaseMock(USER_ID).isAccountNonLocked()))
+                        .value(createUserDatabaseMock(user_id).isAccountNonLocked()))
                 .andExpect(jsonPath("$[:1].credentialsNonExpired")
-                        .value(createUserDatabaseMock(USER_ID).isCredentialsNonExpired()))
-                .andExpect(jsonPath("$[:1].username").value(createUserDatabaseMock(USER_ID).getUsername()))
+                        .value(createUserDatabaseMock(user_id).isCredentialsNonExpired()))
+                .andExpect(jsonPath("$[:1].username").value(createUserDatabaseMock(user_id).getUsername()))
                 .andDo(MockMvcRestDocumentation
                         .document("users/getUsers/ok", preprocessResponse(prettyPrint()),
                                 PayloadDocumentation.responseFields(getResponseArrayFieldDescriptors())));
