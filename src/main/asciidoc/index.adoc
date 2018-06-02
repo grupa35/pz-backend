@@ -324,3 +324,94 @@ include::{snippets}/auth/registration/ok/request-fields.adoc[]
 
 .response fields
 include::{snippets}/auth/registration/ok/response-fields.adoc[]
+
+== PRODUCT
+=== Get product
+==== Good request
+
+.http request
+include::{snippets}/products/getProduct/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/products/getProduct/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/products/getProduct/ok/response-fields.adoc[]
+
+=== Get products
+==== Good request
+
+.http request
+include::{snippets}/products/getProducts/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/products/getProducts/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/products/getProducts/ok/response-fields.adoc[]
+
+=== Add product
+==== Good request
+
+.http request
+include::{snippets}/products/addProduct/ok/http-request.adoc[]
+
+.request fields
+include::{snippets}/products/addProduct/ok/request-fields.adoc[]
+
+.http response
+include::{snippets}/products/addProduct/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/products/addProduct/ok/response-fields.adoc[]
+
+=== Update product
+==== Good request
+
+.http request
+include::{snippets}/products/updateProduct/ok/http-request.adoc[]
+
+.request fields
+include::{snippets}/products/updateProduct/ok/request-fields.adoc[]
+
+.http response
+include::{snippets}/products/updateProduct/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/products/updateProduct/ok/response-fields.adoc[]
+
+=== Delete product
+==== Good request
+
+.http request
+include::{snippets}/products/deleteProduct/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/products/deleteProduct/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/products/deleteProduct/ok/response-fields.adoc[]
+
+=== Delete products
+==== Good request
+
+.http request
+include::{snippets}/products/deleteProducts/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/products/deleteProducts/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/products/deleteProducts/ok/response-fields.adoc[]
+
+=== Get product sale
+==== Good request
+
+.http request
+include::{snippets}/products/getProductSale/ok/http-request.adoc[]
+
+.http response
+include::{snippets}/products/getProductSale/ok/http-response.adoc[]
+
+.response fields
+include::{snippets}/products/getProductSale/ok/response-fields.adoc[]
