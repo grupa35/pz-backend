@@ -46,7 +46,10 @@ public class User implements SimpleObject, UserDetails {
        this.password=other.password;
        this.email=other.email;
        this.role=other.role;
+
        this.addresses=other.addresses;
+
+
        this.enabled=other.enabled;
     }
 
