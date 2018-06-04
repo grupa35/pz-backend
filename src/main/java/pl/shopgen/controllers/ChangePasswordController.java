@@ -44,7 +44,7 @@ public class ChangePasswordController extends AbstractController {
         RegexValidator passwordValidator = new RegexValidator(RegexPattern.PASSWORD);
         if(!newPasswordDTO.getNewPassword().equals(newPasswordDTO.getReNewPassword())) {
             return mapToJson(new ResponseStatusDTO(10, "Your password and confirmation password do not match."));
-        } else if(!newPasswordDTO.getOldPassword().equals(user.getPassword())) {
+        } else if(!encoder.matches(newPasswordDTO.getOldPassword(), user.getPassword())) {
             return mapToJson(new ResponseStatusDTO(12, "Old password is incorrect."));
         } else if(!passwordValidator.isValid(newPasswordDTO.getNewPassword())) {
             return mapToJson(new ResponseStatusDTO(11, "New password doesn't meet the minimum security requirements."));

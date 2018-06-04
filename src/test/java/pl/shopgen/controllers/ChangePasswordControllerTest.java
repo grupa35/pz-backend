@@ -22,9 +22,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import pl.shopgen.ShopApplication;
 import pl.shopgen.models.Role;
 import pl.shopgen.models.User;
 import pl.shopgen.repositories.UserRepository;
+import pl.shopgen.security.BCryptPasswordEncoderComponent;
 import pl.shopgen.services.UserService;
 
 import java.util.Optional;
@@ -40,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest(controllers = ChangePasswordController.class, secure = false)
 @AutoConfigureRestDocs(outputDir = "build/snippets")
-@ContextConfiguration
+@ContextConfiguration(classes = {ShopApplication.class, BCryptPasswordEncoderComponent.class})
 @WebAppConfiguration
 public class ChangePasswordControllerTest {
     
@@ -52,7 +54,8 @@ public class ChangePasswordControllerTest {
 
     @MockBean
     UserRepository userRepository;
-    @MockBean
+
+    @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @MockBean
@@ -85,7 +88,7 @@ public class ChangePasswordControllerTest {
         user.setName("Janusz");
         user.setSurname("Janowski");
         user.setEmail(email);
-        user.setPassword(OLD_PASSWORD);
+        user.setPassword(bCryptPasswordEncoder.encode(OLD_PASSWORD));
         user.setRole(new Role("customer"));
         return Optional.of(user);
     }
