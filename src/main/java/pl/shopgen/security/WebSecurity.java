@@ -14,7 +14,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public WebSecurity(@Qualifier("userDetailsServiceImpl")UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+
+    public WebSecurity(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
@@ -32,6 +33,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilter(new JWTAutenticationFilter(authenticationManager()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+                .logout()
+                .clearAuthentication(true)
+                .logoutUrl("/logout")
+                .invalidateHttpSession(true)
+                .and()
                 .httpBasic();
 
     }
